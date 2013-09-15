@@ -1,0 +1,13 @@
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\bin\Debug\MultipleKinectsPlatform.exe
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\bin\Debug\MultipleKinectsPlatform.exe.config
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MainWindow.baml
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MainWindow.g.cs
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\App.g.cs
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MultipleKinectsPlatform_MarkupCompile.cache
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MultipleKinectsPlatform.g.resources
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MultipleKinectsPlatform.Properties.Resources.resources
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MultipleKinectsPlatform.csproj.GenerateResource.Cache
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MultipleKinectsPlatform.exe
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MultipleKinectsPlatform.pdb
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\obj\Debug\MultipleKinectsPlatform.csprojResolveAssemblyReference.cache
+C:\Users\ethanlim\Documents\Projects\School\MultipleKinectsPlatform\bin\Debug\MultipleKinectsPlatform.pdb
