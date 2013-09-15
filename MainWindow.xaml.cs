@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Kinect;
 
 namespace MultipleKinectsPlatform
 {
@@ -18,21 +19,36 @@ namespace MultipleKinectsPlatform
     public partial class MainWindow : Window
     {
         private Core platform;
+        public class SensorData
+        {
+            public ushort sensorId { get; set; }
+            public string sensorStatus { get; set; }
+            public string sensorStream { get; set; }
+        }
 
         public MainWindow()
         {
+            
             /* Initialise the Main Window */
             InitializeComponent();
-
+       
+            /* Attach Callbacks to the Main Window once Loaded */
+            this.Loaded += MainWindow_Loaded;
 
             /* Create an MultiKinectPlatform object */
             this.platform = new Core();
-            this.platform.Begin();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.platform.End();
+            this.tbStatus.Text = Properties.Resources.KinectInitialising;
+
+            List<KinectSensor> sensorList = this.platform.ListOfSensors();
+
+
+
+            platform.Begin();
         }
+
     }
 }
