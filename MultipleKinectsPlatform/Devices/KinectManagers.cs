@@ -11,13 +11,10 @@ namespace MultipleKinectsPlatform.Devices
         private List<KinectSensor> kinects;
 
         public KinectManagers(){
-            this.kinects = this.GetSensors();
+            this.kinects = this.InitialiseSensors();
         }
 
-        ~KinectManagers(){
-
-            
-        }
+        ~KinectManagers(){}
 
         public void Shutdown(){
             for (var kinects = 0; kinects < KinectSensor.KinectSensors.Count; kinects++)
@@ -35,13 +32,26 @@ namespace MultipleKinectsPlatform.Devices
             if(!ofInterestSensor.DepthStream.IsEnabled){
 
                 kinects[sensorId].DepthStream.Enable(format);
+                kinects[sensorId].DepthFrameReady += this.SensorDepthFrameReady;
             }
         }
-        
+
+        public List<KinectSensor> GetListOfSensors()
+        {
+            if (this.kinects != null)
+            {
+                return this.kinects;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         /**
          * Private Methods
          */
-        private List<KinectSensor> GetSensors()
+        private List<KinectSensor> InitialiseSensors()
         {
             List<KinectSensor> listOfKinects = new List<KinectSensor>();
 
@@ -53,11 +63,12 @@ namespace MultipleKinectsPlatform.Devices
             return listOfKinects;
         }
 
+
         /**
          *      Callbacks
          */
 
-        private BitmapSource Sensor_DepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
+        private void SensorDepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
         {
             using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
             {
@@ -68,12 +79,6 @@ namespace MultipleKinectsPlatform.Devices
                     depthFrame.CopyPixelDataTo(pixelData);
 
                     BitmapSource img = BitmapImage.Create(depthFrame.Width, depthFrame.Height, 96, 96, System.Windows.Media.PixelFormats.Gray16, null, pixelData, stride);
-
-                    return img;
-                }
-                else
-                {
-                    return null;
                 }
             }
         }

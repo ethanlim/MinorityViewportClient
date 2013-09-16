@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="700" Width="1000">
     <Grid>
-        <Grid x:Name="mainViewerGrid" HorizontalAlignment="Left" Height="575" VerticalAlignment="Top" Width="676" Margin="10,44,0,0">
+        <Grid x:Name="mainViewerGrid" HorizontalAlignment="Left" Height="486" VerticalAlignment="Top" Width="676" Margin="10,44,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -14,17 +14,20 @@
             <TextBlock Name="tbStatus" Margin="267,243,-404,-243" />
         </Grid>
         <DockPanel HorizontalAlignment="Left" Height="17" LastChildFill="False" VerticalAlignment="Top" Width="517"/>
-        <Grid x:Name="sideMenuGrid" HorizontalAlignment="Left" Height="638" Margin="691,22,0,0" VerticalAlignment="Top" Width="291">
-            <ListView HorizontalAlignment="Left" Height="91" Margin="10,48,0,0" VerticalAlignment="Top" Width="254">
+        <Grid x:Name="sideMenuGrid" HorizontalAlignment="Left" Height="486" Margin="691,44,0,0" VerticalAlignment="Top" Width="291"/>
+        <Grid HorizontalAlignment="Left" Height="125" Margin="0,535,0,0" VerticalAlignment="Top" Width="972">
+            <ListView x:Name="sensorsList" HorizontalAlignment="Left" Height="68" Margin="35,29,0,0" VerticalAlignment="Top" Width="900">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="80" Header="No." DisplayMemberBinding="{Binding sensorId}"/>
+                        <GridViewColumn Width="300" Header="Sensor Id" DisplayMemberBinding="{Binding sensorId}"/>
                         <GridViewColumn Width="80" Header="Status" DisplayMemberBinding="{Binding sensorStatus}"/>
-                        <GridViewColumn Width="100" Header="Stream" DisplayMemberBinding="{Binding sensorStream}"/>
+                        <GridViewColumn Width="100" Header="Image" DisplayMemberBinding="{Binding imageStream}"/>
+                        <GridViewColumn Width="100" Header="Depth" DisplayMemberBinding="{Binding depthStream}"/>
+                        <GridViewColumn Width="100" Header="Skeleton" DisplayMemberBinding="{Binding skeletonStream}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Label Content="Sensors" HorizontalAlignment="Left" VerticalAlignment="Top" Height="33" Width="178" Margin="10,10,0,0"/>
+            <Label Content="Sensors" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="631" Margin="35,0,0,0"/>
         </Grid>
     </Grid>
 </Window>

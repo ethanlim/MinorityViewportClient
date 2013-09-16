@@ -22,7 +22,7 @@ namespace MultipleKinectsPlatform
 
         public void Begin()
         {
-            this.GetDepthStream(1);
+            this.GetDepthStream(0);
         }
 
         public void End()
@@ -46,5 +46,9 @@ namespace MultipleKinectsPlatform
             return depthImg;
         }
 
+        public List<KinectSensor> ListOfSensors()
+        {
+            return this.kinectMgr.GetListOfSensors();
+        }
     }
 }

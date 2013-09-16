@@ -9,7 +9,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 using Microsoft.Kinect;
+using System.Timers;
 
 namespace MultipleKinectsPlatform
 {
@@ -19,11 +21,31 @@ namespace MultipleKinectsPlatform
     public partial class MainWindow : Window
     {
         private Core platform;
+        private Timer sensorStatusTimer;
+
         public class SensorData
         {
-            public ushort sensorId { get; set; }
+            public string sensorId { get; set; }
             public string sensorStatus { get; set; }
-            public string sensorStream { get; set; }
+            public string imageStream { get; set; }
+            public string depthStream { get; set; }
+            public string skeletonStream { get; set; }
+
+            public SensorData()
+            {
+                imageStream = "Not Enabled";
+                depthStream = "Not Enabled";
+                skeletonStream = "Not Enabled";
+            }
+        
+        }
+
+        private void InitSensorStatusTimer()
+        {
+            sensorStatusTimer = new Timer();
+            sensorStatusTimer.Elapsed += new ElapsedEventHandler(SensorStatusTimer_Elapsed);
+            sensorStatusTimer.Interval = 500; 
+            sensorStatusTimer.Start();
         }
 
         public MainWindow()
@@ -39,16 +61,48 @@ namespace MultipleKinectsPlatform
             this.platform = new Core();
         }
 
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.tbStatus.Text = Properties.Resources.KinectInitialising;
-
-            List<KinectSensor> sensorList = this.platform.ListOfSensors();
-
-
+            
+            InitSensorStatusTimer();
 
             platform.Begin();
         }
 
+        private void PopulateSensorList(List<KinectSensor> displaySensors)
+        {
+            foreach(KinectSensor sensor in displaySensors){
+
+                SensorData newSensorOnDisplay = new SensorData();
+
+                if (sensor.ColorStream.IsEnabled)
+                {
+                    newSensorOnDisplay.imageStream = "Enabled";
+                }
+
+                if (sensor.DepthStream.IsEnabled)
+                {
+                    newSensorOnDisplay.depthStream = "Enabled";
+                }
+
+                if (sensor.SkeletonStream.IsEnabled)
+                {
+                    newSensorOnDisplay.skeletonStream = "Enabled";
+                }
+
+                newSensorOnDisplay.sensorId = sensor.UniqueKinectId;
+                newSensorOnDisplay.sensorStatus = sensor.Status.ToString();
+
+                sensorsList.Items.Add(newSensorOnDisplay);
+            }
+        }
+
+        private void SensorStatusTimer_Elapsed(object sender, EventArgs e)
+        {
+            List<KinectSensor> sensorList = this.platform.ListOfSensors();
+
+            this.PopulateSensorList(sensorList);
+        }
     }
 }
