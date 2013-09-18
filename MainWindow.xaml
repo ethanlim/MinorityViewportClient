@@ -3,15 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="700" Width="1000">
     <Grid>
-        <Grid x:Name="mainViewerGrid" HorizontalAlignment="Left" Height="486" VerticalAlignment="Top" Width="676" Margin="10,44,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid x:Name="mainViewerGrid" HorizontalAlignment="Center" Height="500" VerticalAlignment="Center" Width="676" Margin="34,35,282,135">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Image Name="imgMain" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-            <TextBlock Name="tbStatus" Margin="267,243,-404,-243" />
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Border BorderThickness="8" BorderBrush="Black" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <Image Name="imgMain" />
+            </Border>
+            <TextBlock Name="tbStatus" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
         </Grid>
         <DockPanel HorizontalAlignment="Left" Height="17" LastChildFill="False" VerticalAlignment="Top" Width="517"/>
         <Grid x:Name="sideMenuGrid" HorizontalAlignment="Left" Height="486" Margin="691,44,0,0" VerticalAlignment="Top" Width="291"/>

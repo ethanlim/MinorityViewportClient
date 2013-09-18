@@ -68,6 +68,8 @@ namespace MultipleKinectsPlatform
             InitSensorStatusTimer();
 
             platform.Begin();
+
+            platform.GetDepthStream(0,this.DepthImageReady);
         }
 
         private void PopulateSensorList(List<KinectSensor> displaySensors)
@@ -103,6 +105,11 @@ namespace MultipleKinectsPlatform
             List<KinectSensor> sensorList = this.platform.ListOfSensors();
 
             this.PopulateSensorList(sensorList);
+        }
+
+        private void DepthImageReady(object sender, Devices.DepthReadyArgs e)
+        {
+            this.imgMain.Source = e.depthImage;
         }
     }
 }

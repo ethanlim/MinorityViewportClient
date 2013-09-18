@@ -6,10 +6,17 @@ using System.Windows.Media.Imaging;
 
 namespace MultipleKinectsPlatform.Devices
 {
+    public class DepthReadyArgs : EventArgs
+    {
+        public EventArgs defaultEventArg { get; set; }
+        public BitmapSource depthImage { get; set; }
+    }
+
     class KinectManagers
     {
         private List<KinectSensor> kinects;
-
+        public event EventHandler<DepthReadyArgs> DepthReady;
+     
         public KinectManagers(){
             this.kinects = this.InitialiseSensors();
         }
@@ -23,16 +30,18 @@ namespace MultipleKinectsPlatform.Devices
             }
         }
 
-        public void DepthFromSensor(ushort sensorId, DepthImageFormat format)
+        public void DepthFromSensor(ushort sensorId, 
+                                    DepthImageFormat format,
+                                    EventHandler<DepthReadyArgs> handler)
         {
             KinectSensor ofInterestSensor = kinects[sensorId];
 
             ofInterestSensor.Start();
 
             if(!ofInterestSensor.DepthStream.IsEnabled){
-
                 kinects[sensorId].DepthStream.Enable(format);
                 kinects[sensorId].DepthFrameReady += this.SensorDepthFrameReady;
+                this.DepthReady += handler;
             }
         }
 
@@ -79,6 +88,8 @@ namespace MultipleKinectsPlatform.Devices
                     depthFrame.CopyPixelDataTo(pixelData);
 
                     BitmapSource img = BitmapImage.Create(depthFrame.Width, depthFrame.Height, 96, 96, System.Windows.Media.PixelFormats.Gray16, null, pixelData, stride);
+
+                    this.DepthReady(sender,new DepthReadyArgs {defaultEventArg=e,depthImage=img});
                 }
             }
         }

@@ -9,6 +9,7 @@ namespace MultipleKinectsPlatform
     class Core
     {
         private Devices.KinectManagers kinectMgr;
+        private event EventHandler<Devices.DepthReadyArgs> DepthReady;
 
         public Core()
         {
@@ -22,7 +23,7 @@ namespace MultipleKinectsPlatform
 
         public void Begin()
         {
-            this.GetDepthStream(0);
+
         }
 
         public void End()
@@ -37,18 +38,25 @@ namespace MultipleKinectsPlatform
             return depthImg;
         }
 
-        public BitmapSource GetDepthStream(ushort sensorId){
+        public void GetDepthStream(ushort sensorId, EventHandler<Devices.DepthReadyArgs> handler)
+        {
 
-            BitmapSource depthImg = null;
+            this.kinectMgr.DepthFromSensor(sensorId, DepthImageFormat.Resolution640x480Fps30, this.DepthEventHandler);
 
-            this.kinectMgr.DepthFromSensor(sensorId, DepthImageFormat.Resolution80x60Fps30);
-
-            return depthImg;
+            this.DepthReady += handler;
         }
 
         public List<KinectSensor> ListOfSensors()
         {
             return this.kinectMgr.GetListOfSensors();
+        }
+
+        /**
+         * Callbacks
+         */
+        private void DepthEventHandler(object sender, Devices.DepthReadyArgs e)
+        {
+            this.DepthReady(sender, new Devices.DepthReadyArgs{ defaultEventArg = e, depthImage = e.depthImage });
         }
     }
 }
