@@ -49,6 +49,7 @@ namespace MultipleKinectsPlatform.Devices
         {
             if (this.kinects != null)
             {
+                InitialiseSensors();
                 return this.kinects;
             }
             else

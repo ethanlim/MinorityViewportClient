@@ -21,7 +21,6 @@ namespace MultipleKinectsPlatform
     public partial class MainWindow : Window
     {
         private Core platform;
-        private Timer sensorStatusTimer;
 
         public class SensorData
         {
@@ -37,20 +36,10 @@ namespace MultipleKinectsPlatform
                 depthStream = "Not Enabled";
                 skeletonStream = "Not Enabled";
             }
-        
-        }
-
-        private void InitSensorStatusTimer()
-        {
-            sensorStatusTimer = new Timer();
-            sensorStatusTimer.Elapsed += new ElapsedEventHandler(SensorStatusTimer_Elapsed);
-            sensorStatusTimer.Interval = 500; 
-            sensorStatusTimer.Start();
         }
 
         public MainWindow()
-        {
-            
+        {  
             /* Initialise the Main Window */
             InitializeComponent();
        
@@ -65,8 +54,13 @@ namespace MultipleKinectsPlatform
         {
             this.tbStatus.Text = Properties.Resources.KinectInitialising;
             
-            InitSensorStatusTimer();
+            List<KinectSensor> activeSensorList = this.platform.ListOfSensors();
 
+            if (activeSensorList.Count != 0)
+            {
+                this.tbStatus.Visibility = System.Windows.Visibility.Hidden;
+                this.PopulateSensorList(activeSensorList);
+            }
             platform.Begin();
 
             platform.GetDepthStream(0,this.DepthImageReady);
@@ -74,7 +68,9 @@ namespace MultipleKinectsPlatform
 
         private void PopulateSensorList(List<KinectSensor> displaySensors)
         {
-            foreach(KinectSensor sensor in displaySensors){
+           this.sensorsList.Items.Clear();
+
+           foreach(KinectSensor sensor in displaySensors){
 
                 SensorData newSensorOnDisplay = new SensorData();
 
@@ -100,16 +96,11 @@ namespace MultipleKinectsPlatform
             }
         }
 
-        private void SensorStatusTimer_Elapsed(object sender, EventArgs e)
-        {
-            List<KinectSensor> sensorList = this.platform.ListOfSensors();
-
-            this.PopulateSensorList(sensorList);
-        }
-
         private void DepthImageReady(object sender, Devices.DepthReadyArgs e)
         {
             this.imgMain.Source = e.depthImage;
+
+            this.PopulateSensorList(this.platform.ListOfSensors());
         }
     }
 }
