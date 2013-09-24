@@ -9,7 +9,7 @@ using System.Runtime.Serialization.Json;
 using Microsoft.Kinect;
 using System.IO;
 
-namespace MultipleKinectsPlatform.MultipleKinectsPlatform.Data
+namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 {
     [DataContract(Name="Skeleton")]
     public class Skeleton

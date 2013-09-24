@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.IO;
 
-namespace MultipleKinectsPlatform.MultipleKinectsPlatform.Data
+namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 {
     [DataContract(Name="Joint")]
     public class Joint

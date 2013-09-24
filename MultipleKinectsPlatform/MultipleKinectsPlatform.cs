@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Kinect;         //Require the SDK Library
 using System.Windows.Media.Imaging;
-using MultipleKinectsPlatform.MultipleKinectsPlatform.Data;
-using MultipleKinectsPlatform.MultipleKinectsPlatform.Devices;
+using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
+using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
 
-namespace MultipleKinectsPlatform
+namespace MultipleKinectsPlatformClient
 {
     class Core
     {
