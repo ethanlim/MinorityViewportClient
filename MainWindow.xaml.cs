@@ -12,6 +12,8 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using Microsoft.Kinect;
 using System.Timers;
+using MultipleKinectsPlatform.MultipleKinectsPlatform.Data;
+using MultipleKinectsPlatform.MultipleKinectsPlatform.Devices;
 
 namespace MultipleKinectsPlatform
 {
@@ -21,6 +23,10 @@ namespace MultipleKinectsPlatform
     public partial class MainWindow : Window
     {
         private Core platform;
+        private const int SkeletonCount = 6;
+        private readonly List<KinectSkeleton> skeletonCanvases = new List<KinectSkeleton>(SkeletonCount);
+        private readonly List<Dictionary<JointType, JointMapping>> jointMappings = new List<Dictionary<JointType, JointMapping>>();
+        private Skeleton[] skeletonData;
 
         public class SensorData
         {
@@ -61,9 +67,12 @@ namespace MultipleKinectsPlatform
                 this.tbStatus.Visibility = System.Windows.Visibility.Hidden;
                 this.PopulateSensorList(activeSensorList);
             }
+
             platform.Begin();
 
             platform.GetDepthStream(0,this.DepthImageReady);
+
+            platform.GetSkeletonStream(0, this.SkeletonReady,true,"localhost");
         }
 
         private void PopulateSensorList(List<KinectSensor> displaySensors)
@@ -96,11 +105,30 @@ namespace MultipleKinectsPlatform
             }
         }
 
-        private void DepthImageReady(object sender, Devices.DepthReadyArgs e)
+        private void DepthImageReady(object sender, DepthReadyArgs e)
         {
             this.imgMain.Source = e.depthImage;
 
             this.PopulateSensorList(this.platform.ListOfSensors());
+        }
+
+        private void SkeletonReady(object sender, SkeletonReadyArgs e)
+        {
+            this.DisplaySkeletons(e.allSkeletons);
+
+            this.PopulateSensorList(this.platform.ListOfSensors());
+        }
+
+        private void DisplaySkeletons(Skeleton[] skeletons)
+        {
+            for (int i = 0; i < skeletons.Length && i < this.skeletonCanvases.Count; i++)
+            {
+                var skeleton = skeletons[i];
+                var skeletonCanvas = this.skeletonCanvases[i];
+                var jointMapping = this.jointMappings[i];
+
+
+            }
         }
     }
 }

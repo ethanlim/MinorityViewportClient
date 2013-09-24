@@ -12,6 +12,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            <Canvas Name="skeletonCanvas" Grid.ColumnSpan="2" Grid.RowSpan="2"></Canvas>
             <Border BorderThickness="8" BorderBrush="Black" Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <Image Name="imgMain" />
             </Border>

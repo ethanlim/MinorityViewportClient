@@ -69,8 +69,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MultipleKinectsPlatform\Data\JointMapping.cs" />
+    <Compile Include="MultipleKinectsPlatform\Data\KinectSkeleton.cs" />
     <Compile Include="MultipleKinectsPlatform\Devices\KinectManagers.cs" />
     <Compile Include="MultipleKinectsPlatform\MultipleKinectsPlatform.cs" />
+    <Compile Include="MultipleKinectsPlatform\Networks\Agent.cs" />
+    <Compile Include="MultipleKinectsPlatform\Networks\NetworkManagers.cs" />
+    <Compile Include="MultipleKinectsPlatform\Networks\SkeletonAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

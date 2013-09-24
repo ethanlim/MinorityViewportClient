@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Kinect;         //Require the SDK Library
 using System.Windows.Media.Imaging;
+using System.Windows;
 
-namespace MultipleKinectsPlatform.Devices
+namespace MultipleKinectsPlatform.MultipleKinectsPlatform.Devices
 {
     public class DepthReadyArgs : EventArgs
     {
@@ -12,10 +13,17 @@ namespace MultipleKinectsPlatform.Devices
         public BitmapSource depthImage { get; set; }
     }
 
+    public class SkeletonReadyArgs:EventArgs
+    {
+        public EventArgs defaultEventArg{get;set;}
+        public Skeleton[] allSkeletons { get; set; }
+    }
+    
     class KinectManagers
     {
         private List<KinectSensor> kinects;
         public event EventHandler<DepthReadyArgs> DepthReady;
+        public event EventHandler<SkeletonReadyArgs> SkeletonReady;
      
         public KinectManagers(){
             this.kinects = this.InitialiseSensors();
@@ -39,9 +47,25 @@ namespace MultipleKinectsPlatform.Devices
             ofInterestSensor.Start();
 
             if(!ofInterestSensor.DepthStream.IsEnabled){
-                kinects[sensorId].DepthStream.Enable(format);
-                kinects[sensorId].DepthFrameReady += this.SensorDepthFrameReady;
+                ofInterestSensor.DepthStream.Enable(format);
+                ofInterestSensor.DepthFrameReady += this.SensorDepthFrameReady;
                 this.DepthReady += handler;
+            }
+        }
+
+        public void SkeletonFromSensor(ushort sensorId,
+                                       TransformSmoothParameters smoothParam,
+                                       EventHandler<SkeletonReadyArgs> handler)
+        {
+            KinectSensor ofInterestSensor = kinects[sensorId];
+
+            if (!ofInterestSensor.SkeletonStream.IsEnabled)
+            {
+                ofInterestSensor.SkeletonStream.Enable();
+                ofInterestSensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
+
+                /* Attached the calling object's handler */
+                this.SkeletonReady += handler;
             }
         }
 
@@ -73,7 +97,6 @@ namespace MultipleKinectsPlatform.Devices
             return listOfKinects;
         }
 
-
         /**
          *      Callbacks
          */
@@ -92,6 +115,23 @@ namespace MultipleKinectsPlatform.Devices
 
                     this.DepthReady(sender,new DepthReadyArgs {defaultEventArg=e,depthImage=img});
                 }
+            }
+        }
+
+        private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+        {
+            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
+            {
+                if (skeletonFrame == null)
+                {
+                    return;
+                }
+
+                Skeleton[] totalSkeletonsObserved = new Skeleton[skeletonFrame.SkeletonArrayLength];
+
+                skeletonFrame.CopySkeletonDataTo(totalSkeletonsObserved);
+
+                this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = totalSkeletonsObserved });
             }
         }
         
