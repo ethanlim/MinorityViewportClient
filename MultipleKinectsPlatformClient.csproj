@@ -7,8 +7,8 @@
     <ProjectGuid>{3F1A1D5D-1760-43DB-84CF-54FDB5C55F09}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MultipleKinectsPlatform</RootNamespace>
-    <AssemblyName>MultipleKinectsPlatform</AssemblyName>
+    <RootNamespace>MultipleKinectsPlatformClient</RootNamespace>
+    <AssemblyName>MultipleKinectsPlatformClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
