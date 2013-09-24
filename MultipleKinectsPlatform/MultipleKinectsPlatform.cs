@@ -69,18 +69,29 @@ namespace MultipleKinectsPlatform
         /**
          * Callbacks
          */
+
+        /**
+         *   Depth Data Ready Handler
+         */ 
         private void DepthEventHandler(object sender, DepthReadyArgs e)
         {
             this.DepthReady(sender, new DepthReadyArgs{ defaultEventArg = e, depthImage = e.depthImage });
         }
 
+        /**
+         *  Skeleton Data Ready Handler
+         */ 
         private void SkeletonEventHandler(object sender, SkeletonReadyArgs e)
         {
             this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons });
 
-            if (this.sendSkeletonStreamEnabled)
+            Microsoft.Kinect.Skeleton[] obtainedSkeletons = e.allSkeletons;
+
+            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeleton = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(obtainedSkeletons);
+
+            if(this.sendSkeletonStreamEnabled)
             {
-                
+                string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeleton);
             }
         }
     }

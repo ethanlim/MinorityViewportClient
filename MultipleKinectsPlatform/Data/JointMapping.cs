@@ -17,7 +17,7 @@ namespace MultipleKinectsPlatform.MultipleKinectsPlatform.Data
         /// <summary>
         /// Gets or sets the joint at which we we are looking
         /// </summary>
-        public Joint Joint { get; set; }
+        public Microsoft.Kinect.Joint Joint { get; set; }
 
         /// <summary>
         /// Gets or sets the point mapped into the target display

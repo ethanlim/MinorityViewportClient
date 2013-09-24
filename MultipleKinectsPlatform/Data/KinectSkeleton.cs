@@ -107,9 +107,9 @@ namespace MultipleKinectsPlatform.MultipleKinectsPlatform.Data
             set { SetValue(ShowCenterProperty, value); }
         }
 
-        public Skeleton Skeleton
+        public Microsoft.Kinect.Skeleton Skeleton
         {
-            get { return (Skeleton)GetValue(SkeletonProperty); }
+            get { return (Microsoft.Kinect.Skeleton)GetValue(SkeletonProperty); }
             set { SetValue(SkeletonProperty, value); }
         }
 

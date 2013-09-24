@@ -26,9 +26,7 @@ namespace MultipleKinectsPlatform.MultipleKinectsPlatform.Networks
             switch (type)
             {
                 case AgentType.Skeleton:
-
                     newAgent = new SkeletonAgent();
-
                     break;
                 case AgentType.Depth:
                     break;

@@ -23,10 +23,6 @@ namespace MultipleKinectsPlatform
     public partial class MainWindow : Window
     {
         private Core platform;
-        private const int SkeletonCount = 6;
-        private readonly List<KinectSkeleton> skeletonCanvases = new List<KinectSkeleton>(SkeletonCount);
-        private readonly List<Dictionary<JointType, JointMapping>> jointMappings = new List<Dictionary<JointType, JointMapping>>();
-        private Skeleton[] skeletonData;
 
         public class SensorData
         {
@@ -83,17 +79,17 @@ namespace MultipleKinectsPlatform
 
                 SensorData newSensorOnDisplay = new SensorData();
 
-                if (sensor.ColorStream.IsEnabled)
-                {
+                if (sensor !=null && sensor.ColorStream!=null && sensor.ColorStream.IsEnabled)
+                { 
                     newSensorOnDisplay.imageStream = "Enabled";
                 }
 
-                if (sensor.DepthStream.IsEnabled)
+                if (sensor != null && sensor.DepthStream!=null && sensor.DepthStream.IsEnabled)
                 {
                     newSensorOnDisplay.depthStream = "Enabled";
                 }
 
-                if (sensor.SkeletonStream.IsEnabled)
+                if (sensor != null && sensor.SkeletonStream!=null && sensor.SkeletonStream.IsEnabled)
                 {
                     newSensorOnDisplay.skeletonStream = "Enabled";
                 }
@@ -114,21 +110,8 @@ namespace MultipleKinectsPlatform
 
         private void SkeletonReady(object sender, SkeletonReadyArgs e)
         {
-            this.DisplaySkeletons(e.allSkeletons);
-
             this.PopulateSensorList(this.platform.ListOfSensors());
         }
 
-        private void DisplaySkeletons(Skeleton[] skeletons)
-        {
-            for (int i = 0; i < skeletons.Length && i < this.skeletonCanvases.Count; i++)
-            {
-                var skeleton = skeletons[i];
-                var skeletonCanvas = this.skeletonCanvases[i];
-                var jointMapping = this.jointMappings[i];
-
-
-            }
-        }
     }
 }
