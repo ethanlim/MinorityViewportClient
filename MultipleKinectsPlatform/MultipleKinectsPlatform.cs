@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Kinect;         //Require the SDK Library
+using Microsoft.Kinect;                                                 //Require the SDK Library
 using System.Windows.Media.Imaging;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
@@ -10,6 +10,7 @@ namespace MultipleKinectsPlatformClient
 {
     class Core
     {
+        private ushort clientId=0;
         private KinectManagers kinectMgr;
         private MultipleKinectsPlatform.Networks.NetworkManagers networkMgr;
         private MultipleKinectsPlatform.Networks.Agent comAgent;
@@ -83,15 +84,17 @@ namespace MultipleKinectsPlatformClient
          */ 
         private void SkeletonEventHandler(object sender, SkeletonReadyArgs e)
         {
-            this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons });
+            this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons,kinectId=e.kinectId});
 
             Microsoft.Kinect.Skeleton[] obtainedSkeletons = e.allSkeletons;
 
-            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeleton = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(obtainedSkeletons);
+            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeleton = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(obtainedSkeletons,this.clientId,e.kinectId);
 
             if(this.sendSkeletonStreamEnabled)
             {
                 string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeleton);
+
+                comAgent.SendData(skeletonJSON);
             }
         }
     }

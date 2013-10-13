@@ -26,15 +26,23 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         [DataMember]
         public float pos_z;
 
-        public Skeleton(List<Joint> givenJoints,float i_x,float i_y,float i_z)
+        [DataMember]
+        public ushort clientId;
+
+        [DataMember]
+        public string sensorId;
+
+        public Skeleton(List<Joint> givenJoints,float i_x,float i_y,float i_z,ushort i_clientId,string i_sensorId)
         {
             Joints = givenJoints;
             pos_x = i_x;
             pos_y = i_y;
             pos_z = i_z;
+            clientId = i_clientId;
+            sensorId = i_sensorId;
         }
 
-        public static List<Skeleton> ConvertKinectSkeletons(Microsoft.Kinect.Skeleton[] obtainedSkeletons)
+        public static List<Skeleton> ConvertKinectSkeletons(Microsoft.Kinect.Skeleton[] obtainedSkeletons,ushort clientId, string kinectId)
         {
             List<Skeleton> convertedSkeletons = new List<Skeleton>();
 
@@ -57,7 +65,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 
                 SkeletonPoint skeletonPos = skeleton.Position;
 
-                MultipleKinectsPlatform.Data.Skeleton convertedSkeleton = new Skeleton(convertedJoints,skeletonPos.X,skeletonPos.Y,skeletonPos.Z);
+                MultipleKinectsPlatform.Data.Skeleton convertedSkeleton = new Skeleton(convertedJoints,skeletonPos.X,skeletonPos.Y,skeletonPos.Z,clientId,kinectId);
 
                 convertedSkeletons.Add(convertedSkeleton);
             }

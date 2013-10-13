@@ -8,6 +8,6 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 {
     abstract class Agent
     {
-        public abstract void SendData();
+        public abstract void SendData(string json);
     }
 }

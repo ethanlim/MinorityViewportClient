@@ -11,12 +11,14 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
     {
         public EventArgs defaultEventArg { get; set; }
         public BitmapSource depthImage { get; set; }
+        public String kinectId { get; set; }
     }
 
     public class SkeletonReadyArgs:EventArgs
     {
         public EventArgs defaultEventArg{get;set;}
         public Skeleton[] allSkeletons { get; set; }
+        public String kinectId { get; set; }
     }
     
     class KinectManagers
@@ -113,7 +115,9 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
 
                     BitmapSource img = BitmapImage.Create(depthFrame.Width, depthFrame.Height, 96, 96, System.Windows.Media.PixelFormats.Gray16, null, pixelData, stride);
 
-                    this.DepthReady(sender,new DepthReadyArgs {defaultEventArg=e,depthImage=img});
+                    KinectSensor sensor = (KinectSensor)sender;
+
+                    this.DepthReady(sender,new DepthReadyArgs {defaultEventArg=e,depthImage=img,kinectId=sensor.UniqueKinectId});
                 }
             }
         }
@@ -126,12 +130,14 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
                 {
                     return;
                 }
-
+                
                 Skeleton[] totalSkeletonsObserved = new Skeleton[skeletonFrame.SkeletonArrayLength];
 
                 skeletonFrame.CopySkeletonDataTo(totalSkeletonsObserved);
 
-                this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = totalSkeletonsObserved });
+                KinectSensor sensor = (KinectSensor)sender;
+
+                this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = totalSkeletonsObserved,kinectId=sensor.UniqueKinectId});
             }
         }
         
