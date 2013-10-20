@@ -94,7 +94,10 @@ namespace MultipleKinectsPlatformClient
             {
                 string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeleton);
 
-                comAgent.SendData(skeletonJSON);
+                if (!skeletonJSON.Equals(""))
+                {
+                    comAgent.SendData(skeletonJSON);
+                }
             }
         }
     }

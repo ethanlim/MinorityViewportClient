@@ -82,13 +82,18 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 
         public static string ConvertToJSON(List<MultipleKinectsPlatform.Data.Skeleton> skeletonsToBeSerialise)
         {
-            MemoryStream memStream = new MemoryStream();
+            string json = "";
 
-            DataContractJsonSerializer jsonSer = new DataContractJsonSerializer(typeof(List<MultipleKinectsPlatform.Data.Skeleton>));
+            if (skeletonsToBeSerialise.Count > 0)
+            {
+                MemoryStream memStream = new MemoryStream();
 
-            jsonSer.WriteObject(memStream, skeletonsToBeSerialise);
-    
-            string json = System.Text.Encoding.UTF8.GetString(memStream.GetBuffer(), 0, Convert.ToInt32(memStream.Length));
+                DataContractJsonSerializer jsonSer = new DataContractJsonSerializer(typeof(List<MultipleKinectsPlatform.Data.Skeleton>));
+
+                jsonSer.WriteObject(memStream, skeletonsToBeSerialise);
+
+                json = System.Text.Encoding.UTF8.GetString(memStream.GetBuffer(), 0, Convert.ToInt32(memStream.Length));
+            }
 
             return json;
         }
