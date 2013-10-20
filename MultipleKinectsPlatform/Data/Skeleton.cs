@@ -18,6 +18,9 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         public List<Joint> Joints;
 
         [DataMember]
+        public int skeletonId;
+
+        [DataMember]
         public float pos_x;
 
         [DataMember]
@@ -32,7 +35,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         [DataMember]
         public string sensorId;
 
-        public Skeleton(List<Joint> givenJoints,float i_x,float i_y,float i_z,ushort i_clientId,string i_sensorId)
+        public Skeleton(List<Joint> givenJoints,float i_x,float i_y,float i_z,ushort i_clientId,string i_sensorId,int i_skeletonId)
         {
             Joints = givenJoints;
             pos_x = i_x;
@@ -40,6 +43,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
             pos_z = i_z;
             clientId = i_clientId;
             sensorId = i_sensorId;
+            skeletonId = i_skeletonId;
         }
 
         public static List<Skeleton> ConvertKinectSkeletons(Microsoft.Kinect.Skeleton[] obtainedSkeletons,ushort clientId, string kinectId)
@@ -48,6 +52,8 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 
             foreach (Microsoft.Kinect.Skeleton skeleton in obtainedSkeletons)
             {
+                if (skeleton.TrackingState.Equals(SkeletonTrackingState.PositionOnly) || skeleton.TrackingState.Equals(SkeletonTrackingState.Tracked))
+                {
                 /* Get all joints of the skeleton */
 
                 List<Joint> convertedJoints = new List<Joint>();
@@ -65,9 +71,10 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 
                 SkeletonPoint skeletonPos = skeleton.Position;
 
-                MultipleKinectsPlatform.Data.Skeleton convertedSkeleton = new Skeleton(convertedJoints,skeletonPos.X,skeletonPos.Y,skeletonPos.Z,clientId,kinectId);
+                MultipleKinectsPlatform.Data.Skeleton convertedSkeleton = new Skeleton(convertedJoints,skeletonPos.X,skeletonPos.Y,skeletonPos.Z,clientId,kinectId,skeleton.TrackingId);
 
                 convertedSkeletons.Add(convertedSkeleton);
+                }
             }
 
             return convertedSkeletons;
