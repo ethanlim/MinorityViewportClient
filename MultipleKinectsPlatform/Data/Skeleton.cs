@@ -58,13 +58,25 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 
                 List<Joint> convertedJoints = new List<Joint>();
 
-                foreach (Microsoft.Kinect.Joint joint in skeleton.Joints)
+                int numberOfJoints = skeleton.Joints.Count;
+
+                for (ushort cur_joint = 0; cur_joint < numberOfJoints; cur_joint++)
                 {
-                    SkeletonPoint points  = joint.Position;
+                    Joint.JointType type = (Joint.JointType)cur_joint;
 
-                    MultipleKinectsPlatform.Data.Joint convertedJoint = new MultipleKinectsPlatform.Data.Joint(points.X,points.Y,points.Z);
+                    foreach (Microsoft.Kinect.Joint joint in skeleton.Joints)
+                    {
+                        if (joint.JointType.ToString() == type.ToString())
+                        {
+                            SkeletonPoint points = joint.Position;
 
-                    convertedJoints.Add(convertedJoint);
+                            MultipleKinectsPlatform.Data.Joint convertedJoint = new MultipleKinectsPlatform.Data.Joint(points.X, points.Y, points.Z);
+
+                            convertedJoints.Add(convertedJoint);
+
+                            break;
+                        }
+                    }
                 }
 
                 /* Get the position of the skeleton */

@@ -20,11 +20,35 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         [DataMember]
         public float Z;
 
+        public enum JointType{
+            AnkleLeft,
+            AnkleRight,
+            ElbowLeft,
+            ElbowRight,
+            FootLeft,
+            FootRight,
+            HandLeft,
+            HandRight,
+            Head,
+            HipCenter,
+            HipLeft,
+            HipRight,
+            KneeLeft,
+            KneeRight,
+            ShoulderCenter,
+            ShoulderLeft,
+            ShoulderRight,
+            Spine,
+            WristLeft,
+            WristRight
+        }
+
         public Joint(float i_x, float i_y, float i_z)
         {
             X = i_x;
             Y = i_y;
             Z = i_z;
         }
+
     }
 }
