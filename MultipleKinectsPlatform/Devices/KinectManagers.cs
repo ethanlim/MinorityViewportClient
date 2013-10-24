@@ -31,12 +31,22 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
             this.kinects = this.InitialiseSensors();
         }
 
-        ~KinectManagers(){}
+        ~KinectManagers(){
+            this.Shutdown();
+        }
 
         public void Shutdown(){
-            for (var kinects = 0; kinects < KinectSensor.KinectSensors.Count; kinects++)
+
+            try
             {
-                this.kinects[kinects].Stop();
+                for (var kinects = 0; kinects < KinectSensor.KinectSensors.Count; kinects++)
+                {
+                    this.kinects[kinects].Stop();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write("Error Shutting Down Kinects : " + ex.Message);
             }
         }
 
@@ -54,6 +64,12 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
                 this.DepthReady += handler;
             }
         }
+
+        public void StopStreams(ushort sensorId)
+        {
+            this.kinects[sensorId].Dispose();
+        }
+
 
         public void SkeletonFromSensor(ushort sensorId,
                                        TransformSmoothParameters smoothParam,

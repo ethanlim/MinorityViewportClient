@@ -20,6 +20,9 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         [DataMember]
         public float Z;
 
+        [DataMember]
+        public string trackedMode;
+
         public enum JointType{
             AnkleLeft,
             AnkleRight,
@@ -43,11 +46,12 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
             WristRight
         }
 
-        public Joint(float i_x, float i_y, float i_z)
+        public Joint(float i_x, float i_y, float i_z,string i_trackingMode)
         {
             X = i_x;
             Y = i_y;
             Z = i_z;
+            trackedMode = i_trackingMode;
         }
 
     }

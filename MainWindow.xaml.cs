@@ -64,11 +64,9 @@ namespace MultipleKinectsPlatformClient
                 this.PopulateSensorList(activeSensorList);
             }
 
-            platform.Begin();
+            platform.GetDepthStream(1,this.DepthImageReady);
 
-            platform.GetDepthStream(0,this.DepthImageReady);
-
-            platform.GetSkeletonStream(0, this.SkeletonReady,true,"localhost");
+            platform.GetSkeletonStream(1, this.SkeletonReady,true,"localhost");
         }
 
         private void PopulateSensorList(List<KinectSensor> displaySensors)
@@ -111,6 +109,15 @@ namespace MultipleKinectsPlatformClient
         private void SkeletonReady(object sender, SkeletonReadyArgs e)
         {
             this.PopulateSensorList(this.platform.ListOfSensors());
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            platform.ShutDown();
+
+            Application.Current.Shutdown();
         }
 
     }

@@ -23,11 +23,30 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             http.Method = "POST";
             http.Headers["JSON"] = json;            //pack json in header
 
-            var response = http.GetResponse();
+            WebResponse response = null;
+            bool tryAgain=false;
 
-            var stream = response.GetResponseStream();
-            var sr = new StreamReader(stream);
-            var content = sr.ReadToEnd();
+            do
+            {
+                try
+                {
+                    response = http.GetResponse();
+
+                    if (http.HaveResponse)
+                        tryAgain = false;
+                }
+                catch (WebException webEx)
+                {
+                    tryAgain = true;
+                }
+            } while (tryAgain);
+
+            if (response != null)
+            {
+                var stream = response.GetResponseStream();
+                var sr = new StreamReader(stream);
+                var content = sr.ReadToEnd();
+            }
         }
     }
 }

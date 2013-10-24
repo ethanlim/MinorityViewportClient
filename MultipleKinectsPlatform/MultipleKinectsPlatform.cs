@@ -21,6 +21,7 @@ namespace MultipleKinectsPlatformClient
         public Core()
         {
             this.kinectMgr = new KinectManagers();
+            this.kinectMgr.Shutdown();
             this.networkMgr = new MultipleKinectsPlatform.Networks.NetworkManagers();
         }
 
@@ -28,13 +29,8 @@ namespace MultipleKinectsPlatformClient
         {
 
         }
-
-        public void Begin()
-        {
-
-        }
-
-        public void End()
+        
+        public void ShutDown()
         {
             this.kinectMgr.Shutdown();
         }
@@ -62,15 +58,16 @@ namespace MultipleKinectsPlatformClient
             this.SkeletonReady = handler;
         }
 
+        public void StopStreams(ushort sensorId)
+        {
+            this.kinectMgr.StopStreams(sensorId);
+        }
+
         public List<KinectSensor> ListOfSensors()
         {
             return this.kinectMgr.GetListOfSensors();
         }
-
-        /**
-         * Callbacks
-         */
-
+        
         /**
          *   Depth Data Ready Handler
          */ 
