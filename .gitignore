@@ -38,9 +38,8 @@ x64/
 .builds
 
 #Visual Studio Files
-*.csproj
 *.sdf
-*.sln
+
 
 # Visual C++ cache files
 ipch/
