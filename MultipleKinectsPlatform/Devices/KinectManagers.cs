@@ -70,7 +70,6 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
             this.kinects[sensorId].Dispose();
         }
 
-
         public void SkeletonFromSensor(ushort sensorId,
                                        TransformSmoothParameters smoothParam,
                                        EventHandler<SkeletonReadyArgs> handler)

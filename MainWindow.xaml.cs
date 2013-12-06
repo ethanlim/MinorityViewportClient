@@ -44,12 +44,13 @@ namespace MultipleKinectsPlatformClient
         {  
             /* Initialise the Main Window */
             InitializeComponent();
-       
+            
             /* Attach Callbacks to the Main Window once Loaded */
             this.Loaded += MainWindow_Loaded;
 
             /* Create an MultiKinectPlatform object */
             this.platform = new Core();
+
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -57,16 +58,25 @@ namespace MultipleKinectsPlatformClient
             this.tbStatus.Text = Properties.Resources.KinectInitialising;
             
             List<KinectSensor> activeSensorList = this.platform.ListOfSensors();
-
-            if (activeSensorList.Count != 0)
+            int sensorsCount = activeSensorList.Count;
+            
+            if (sensorsCount>0)
             {
                 this.tbStatus.Visibility = System.Windows.Visibility.Hidden;
+
                 this.PopulateSensorList(activeSensorList);
+
+                for(ushort sensorId=0;sensorId<sensorsCount;sensorId+=1){
+
+                    platform.GetDepthStream(sensorId, this.DepthImageReady);
+
+                    platform.GetSkeletonStream(sensorId, this.SkeletonReady, true, "localhost");
+
+                    displaySensorMenu.Items.Add(activeSensorList[sensorId].UniqueKinectId);
+                }
+
+                displaySensorMenu.SelectedIndex = 0;
             }
-
-            platform.GetDepthStream(0,this.DepthImageReady);
-
-            platform.GetSkeletonStream(0, this.SkeletonReady,true,"localhost");
         }
 
         private void PopulateSensorList(List<KinectSensor> displaySensors)
@@ -101,8 +111,11 @@ namespace MultipleKinectsPlatformClient
 
         private void DepthImageReady(object sender, DepthReadyArgs e)
         {
-            this.imgMain.Source = e.depthImage;
-
+            if ((string)displaySensorMenu.SelectedValue == e.kinectId)
+            {
+                this.imgMain.Source = e.depthImage;
+            }
+           
             this.PopulateSensorList(this.platform.ListOfSensors());
         }
 

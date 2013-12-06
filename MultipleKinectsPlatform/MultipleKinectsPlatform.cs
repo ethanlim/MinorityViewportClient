@@ -73,7 +73,7 @@ namespace MultipleKinectsPlatformClient
          */ 
         private void DepthEventHandler(object sender, DepthReadyArgs e)
         {
-            this.DepthReady(sender, new DepthReadyArgs{ defaultEventArg = e, depthImage = e.depthImage });
+            this.DepthReady(sender, new DepthReadyArgs{ defaultEventArg = e, depthImage = e.depthImage,kinectId = e.kinectId });
         }
 
         /**

@@ -19,7 +19,14 @@
             <TextBlock Name="tbStatus" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
         </Grid>
         <DockPanel HorizontalAlignment="Left" Height="17" LastChildFill="False" VerticalAlignment="Top" Width="517"/>
-        <Grid x:Name="sideMenuGrid" HorizontalAlignment="Left" Height="486" Margin="691,44,0,0" VerticalAlignment="Top" Width="291"/>
+        <Grid x:Name="sideMenuGrid" HorizontalAlignment="Left" Height="486" Margin="691,44,0,0" VerticalAlignment="Top" Width="291">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="35*"/>
+                <ColumnDefinition Width="256*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Display Sensor" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="246" Margin="0.149,0,0,0" Grid.Column="1"/>
+            <ComboBox x:Name="displaySensorMenu" Grid.Column="1" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="206"/>
+        </Grid>
         <Grid HorizontalAlignment="Left" Height="125" Margin="0,535,0,0" VerticalAlignment="Top" Width="972">
             <ListView x:Name="sensorsList" HorizontalAlignment="Left" Height="68" Margin="35,29,0,0" VerticalAlignment="Top" Width="900">
                 <ListView.View>
