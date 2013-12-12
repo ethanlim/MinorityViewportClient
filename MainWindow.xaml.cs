@@ -166,8 +166,8 @@ namespace MultipleKinectsPlatformClient
 
         private void FrameRateEvent(object sender, EventArgs args)
         {
-            this.depthFrameRate.Content = depthFramesRecv + " fps";
-            this.skeletonFrameRate.Content = skeletonFramesRecv + " fps";
+            this.combinedDepthFrameRate.Content = depthFramesRecv + " fps";
+            this.combinedSkeletonFrameRate.Content = skeletonFramesRecv + " fps";
 
             this.depthFramesRecv = 0;
             this.skeletonFramesRecv = 0;
