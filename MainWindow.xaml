@@ -16,7 +16,6 @@
             <Border BorderThickness="2" BorderBrush="Black" Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <Image Name="imgMain" />
             </Border>
-            <TextBlock Name="tbStatus" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
         </Grid>
         <DockPanel HorizontalAlignment="Left" Height="17" LastChildFill="False" VerticalAlignment="Top" Width="517"/>
         <Grid x:Name="sideMenuGrid" HorizontalAlignment="Left" Height="486" Margin="691,44,0,0" VerticalAlignment="Top" Width="255">

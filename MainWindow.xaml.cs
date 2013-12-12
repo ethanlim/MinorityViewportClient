@@ -70,31 +70,41 @@ namespace MultipleKinectsPlatformClient
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.tbStatus.Text = Properties.Resources.KinectInitialising;
-
             this.SensorsInitialisation();
+
+            this.PopulateSensorSelection(true);
         }
 
         private void SensorsInitialisation()
         {
             List<KinectSensor> activeSensorList = this.platform.ListOfSensors();
-            int sensorsCount = activeSensorList.Count;
-
-            if (sensorsCount > 0)
+ 
+            for (ushort sensorId = 0; sensorId < activeSensorList.Count; sensorId += 1)
             {
-                this.tbStatus.Visibility = System.Windows.Visibility.Hidden;
+                platform.GetDepthStream(sensorId, this.DepthImageReady);
 
-                this.PopulateSensorList(activeSensorList);
-
-                for (ushort sensorId = 0; sensorId < sensorsCount; sensorId += 1)
-                {
-                    platform.GetDepthStream(sensorId, this.DepthImageReady);
-
-                    platform.GetSkeletonStream(sensorId, this.SkeletonReady, true, "localhost");
-
-                    displaySensorMenu.Items.Add(activeSensorList[sensorId].UniqueKinectId);
-                }
+                platform.GetSkeletonStream(sensorId, this.SkeletonReady, true, "localhost");
             }
+        }
+
+        private void PopulateSensorSelection(bool firstTime)
+        {
+            List<KinectSensor> activeSensorList = this.platform.ListOfSensors();
+            int selectedItemIdx = 0;
+
+            if (!firstTime)
+            {
+                selectedItemIdx = displaySensorMenu.SelectedIndex;
+            }
+
+            displaySensorMenu.Items.Clear();
+
+            for (ushort sensorId = 0; sensorId < activeSensorList.Count; sensorId += 1)
+            {
+                displaySensorMenu.Items.Add(activeSensorList[sensorId].UniqueKinectId);
+            }
+
+            displaySensorMenu.SelectedIndex = selectedItemIdx;
         }
 
         private void PopulateSensorList(List<KinectSensor> displaySensors)
@@ -141,7 +151,6 @@ namespace MultipleKinectsPlatformClient
         private void SkeletonReady(object sender, SkeletonReadyArgs e)
         {
             skeletonFramesRecv += 1;
-
         }
 
         protected override void OnClosed(EventArgs e)
@@ -167,6 +176,8 @@ namespace MultipleKinectsPlatformClient
         private void RefreshSensorList(object sender, EventArgs args)
         {
             this.PopulateSensorList(this.platform.ListOfSensors());
+
+            this.PopulateSensorSelection(false);
         }
 
     }
