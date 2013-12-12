@@ -23,6 +23,10 @@ namespace MultipleKinectsPlatformClient
     public partial class MainWindow : Window
     {
         private Core platform;
+        private System.Windows.Threading.DispatcherTimer frameRateTimer;
+        private System.Windows.Threading.DispatcherTimer sensorsListRefreshTimer;
+        private double skeletonFramesRecv;
+        private double depthFramesRecv;
 
         public class SensorData
         {
@@ -51,31 +55,45 @@ namespace MultipleKinectsPlatformClient
             /* Create an MultiKinectPlatform object */
             this.platform = new Core();
 
+            depthFramesRecv = 0;
+            skeletonFramesRecv = 0;
+            frameRateTimer = new System.Windows.Threading.DispatcherTimer();
+            frameRateTimer.Tick += new EventHandler(FrameRateEvent);
+            frameRateTimer.Interval = new TimeSpan(0,0,1);
+            frameRateTimer.Start();
+
+            sensorsListRefreshTimer = new System.Windows.Threading.DispatcherTimer();
+            sensorsListRefreshTimer.Tick += new EventHandler(RefreshSensorList);
+            sensorsListRefreshTimer.Interval = new TimeSpan(0, 0, 5);
+            sensorsListRefreshTimer.Start();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.tbStatus.Text = Properties.Resources.KinectInitialising;
-            
+
+            this.SensorsInitialisation();
+        }
+
+        private void SensorsInitialisation()
+        {
             List<KinectSensor> activeSensorList = this.platform.ListOfSensors();
             int sensorsCount = activeSensorList.Count;
-            
-            if (sensorsCount>0)
+
+            if (sensorsCount > 0)
             {
                 this.tbStatus.Visibility = System.Windows.Visibility.Hidden;
 
                 this.PopulateSensorList(activeSensorList);
 
-                for(ushort sensorId=0;sensorId<sensorsCount;sensorId+=1){
-
+                for (ushort sensorId = 0; sensorId < sensorsCount; sensorId += 1)
+                {
                     platform.GetDepthStream(sensorId, this.DepthImageReady);
 
                     platform.GetSkeletonStream(sensorId, this.SkeletonReady, true, "localhost");
 
                     displaySensorMenu.Items.Add(activeSensorList[sensorId].UniqueKinectId);
                 }
-
-                displaySensorMenu.SelectedIndex = 0;
             }
         }
 
@@ -111,26 +129,44 @@ namespace MultipleKinectsPlatformClient
 
         private void DepthImageReady(object sender, DepthReadyArgs e)
         {
+            this.depthFramesRecv += 1;
+
             if ((string)displaySensorMenu.SelectedValue == e.kinectId)
             {
                 this.imgMain.Source = e.depthImage;
             }
            
-            this.PopulateSensorList(this.platform.ListOfSensors());
         }
 
         private void SkeletonReady(object sender, SkeletonReadyArgs e)
         {
-            this.PopulateSensorList(this.platform.ListOfSensors());
+            skeletonFramesRecv += 1;
+
         }
 
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
 
+            frameRateTimer.Stop();
+
             platform.ShutDown();
 
             Application.Current.Shutdown();
+        }
+
+        private void FrameRateEvent(object sender, EventArgs args)
+        {
+            this.depthFrameRate.Content = depthFramesRecv + " fps";
+            this.skeletonFrameRate.Content = skeletonFramesRecv + " fps";
+
+            this.depthFramesRecv = 0;
+            this.skeletonFramesRecv = 0;
+        }
+
+        private void RefreshSensorList(object sender, EventArgs args)
+        {
+            this.PopulateSensorList(this.platform.ListOfSensors());
         }
 
     }

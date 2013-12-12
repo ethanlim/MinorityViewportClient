@@ -16,30 +16,29 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         
         public override void SendData(string json)
         {
-            var http = (HttpWebRequest)WebRequest.Create(this.endPoint);
-
-            http.Accept = "application/json";
-            http.ContentType = "application/json";
-            http.Method = "POST";
-            http.Headers["JSON"] = json;            //pack json in header
-
+            HttpWebRequest http = null;
             WebResponse response = null;
-            bool tryAgain=false;
+
+            bool retry=false;
 
             do
             {
                 try
                 {
-                    response = http.GetResponse();
+                    http = (HttpWebRequest)WebRequest.Create(this.endPoint);
 
-                    if (http.HaveResponse)
-                        tryAgain = false;
+                    http.Accept = "application/json";
+                    http.ContentType = "application/json";
+                    http.Method = "POST";
+                    http.Headers["JSON"] = json;            //pack json in header
+
+                    response = http.GetResponse();
                 }
-                catch (WebException webEx)
+                catch (WebException webex)
                 {
-                    tryAgain = true;
+                    retry = true;
                 }
-            } while (tryAgain);
+            } while (retry);
 
             if (response != null)
             {
