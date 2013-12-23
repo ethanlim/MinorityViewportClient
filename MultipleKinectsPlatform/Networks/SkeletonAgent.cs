@@ -16,8 +16,8 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         
         public override void SendData(string json)
         {
-            HttpWebRequest http = null;
-            WebResponse response = null;
+            HttpWebRequest httpForSensorData = null;
+            WebResponse responseForSensorData = null;
 
             bool retry=false;
 
@@ -25,14 +25,14 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             {
                 try
                 {
-                    http = (HttpWebRequest)WebRequest.Create(this.endPoint);
+                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint+"/sensors/data");
 
-                    http.Accept = "application/json";
-                    http.ContentType = "application/json";
-                    http.Method = "POST";
-                    http.Headers["SENSOR_JSON"] = json;            //pack json in header
+                    httpForSensorData.Accept = "application/json";
+                    httpForSensorData.ContentType = "application/json";
+                    httpForSensorData.Method = "POST";
+                    httpForSensorData.Headers["SENSOR_JSON"] = json;            //pack json in header
 
-                    response = http.GetResponse();
+                    responseForSensorData = httpForSensorData.GetResponse();
                 }
                 catch (WebException webex)
                 {
@@ -40,12 +40,69 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                 }
             } while (retry);
 
-            if (response != null)
+            if (responseForSensorData != null)
             {
-                var stream = response.GetResponseStream();
+                var stream = responseForSensorData.GetResponseStream();
                 var sr = new StreamReader(stream);
                 var content = sr.ReadToEnd();
             }
+        }
+
+        public override uint RegisterClientId()
+        {
+            uint givenClientId = 0;
+
+            HttpWebRequest httpToRequestForClientId = null;
+            WebResponse responseFromObtainedClientId = null;
+
+            bool retry = false;
+
+            do
+            {
+                try
+                {
+                    httpToRequestForClientId = (HttpWebRequest)WebRequest.Create(this.endPoint+"/client/new");
+
+                    httpToRequestForClientId.Accept = "application/json";
+                    httpToRequestForClientId.ContentType = "application/json";
+                    httpToRequestForClientId.Method = "POST";
+
+                    responseFromObtainedClientId = httpToRequestForClientId.GetResponse();
+                }
+                catch (WebException webex)
+                {
+                    retry = true;
+                }
+
+            } while (retry);
+
+            return givenClientId;
+        }
+
+        public override void DeregisterClient()
+        {
+            HttpWebRequest httpToDeregistration = null;
+            WebResponse responseFromDeregistration = null;
+
+            bool retry = false;
+
+            do
+            {
+                try
+                {
+                    httpToDeregistration = (HttpWebRequest)WebRequest.Create(this.endPoint + "/client/deregister");
+
+                    httpToDeregistration.Accept = "application/json";
+                    httpToDeregistration.ContentType = "application/json";
+                    httpToDeregistration.Method = "POST";
+
+                    responseFromDeregistration = httpToDeregistration.GetResponse();
+                }
+                catch (WebException webex)
+                {
+                    retry = true;
+                }
+            } while (retry);
         }
     }
 }

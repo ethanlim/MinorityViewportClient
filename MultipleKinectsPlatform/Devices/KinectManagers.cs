@@ -118,7 +118,8 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
          *      Callbacks
          */
 
-        private void SensorDepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
+        private void SensorDepthFrameReady( object sender, 
+                                            DepthImageFrameReadyEventArgs e)
         {
             using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
             {
@@ -137,7 +138,8 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
             }
         }
 
-        private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+        private void SensorSkeletonFrameReady(object sender, 
+                                              SkeletonFrameReadyEventArgs e)
         {
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
             {

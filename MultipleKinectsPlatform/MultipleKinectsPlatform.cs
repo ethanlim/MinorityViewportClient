@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Kinect;                                                 //Require the SDK Library
 using System.Windows.Media.Imaging;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
+using Microsoft.Kinect;                                                 //Require the SDK Library
 
 namespace MultipleKinectsPlatformClient
 {
@@ -85,11 +85,11 @@ namespace MultipleKinectsPlatformClient
 
             Microsoft.Kinect.Skeleton[] obtainedSkeletons = e.allSkeletons;
 
-            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeleton = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(obtainedSkeletons,this.clientId,e.kinectId);
+            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeletons = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(obtainedSkeletons,this.clientId,e.kinectId);
 
             if(this.sendSkeletonStreamEnabled)
             {
-                string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeleton);
+                string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
 
                 if (!skeletonJSON.Equals(""))
                 {
