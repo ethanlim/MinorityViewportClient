@@ -50,7 +50,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         public override uint RegisterClientId(string physical_loc,string ip_addr)
         {
             uint givenClientId = 0;
-
+            WebResponse responseFromObtainedClientId = null;
             HttpWebRequest httpToRequestForClientId = (HttpWebRequest)WebRequest.Create(this.endPoint + "/web/api/clients/register.json");
 
             httpToRequestForClientId.Accept = "application/json";
@@ -60,7 +60,15 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             httpToRequestForClientId.Headers["PHYSICAL_LOC"] = physical_loc;
             httpToRequestForClientId.Headers["IP_ADDR"] = ip_addr;
 
-            WebResponse responseFromObtainedClientId = httpToRequestForClientId.GetResponse();
+            try{
+               
+                responseFromObtainedClientId = httpToRequestForClientId.GetResponse();
+
+            }
+            catch (WebException webex)
+            {
+                Console.Write(webex.Message);
+            }
 
             if (responseFromObtainedClientId != null)
             {
@@ -83,7 +91,14 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             httpToDeregistration.Method = "POST";
             httpToDeregistration.Headers["CLIENT_ID"] = clientId.ToString();
 
-            WebResponse responseFromDeregistration = httpToDeregistration.GetResponse();
+            try
+            {
+                WebResponse responseFromDeregistration = httpToDeregistration.GetResponse();
+            }
+            catch (WebException webex)
+            {
+                Console.Write(webex.Message);
+            }
         }
     }
 }
