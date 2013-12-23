@@ -10,11 +10,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
-using Microsoft.Kinect;
 using System.Collections.Specialized;
 using System.Timers;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
+using Microsoft.Kinect;
 
 
 namespace MultipleKinectsPlatformClient
