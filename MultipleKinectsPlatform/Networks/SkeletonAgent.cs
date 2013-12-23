@@ -30,7 +30,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                     http.Accept = "application/json";
                     http.ContentType = "application/json";
                     http.Method = "POST";
-                    http.Headers["JSON"] = json;            //pack json in header
+                    http.Headers["SENSOR_JSON"] = json;            //pack json in header
 
                     response = http.GetResponse();
                 }

@@ -11,9 +11,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using Microsoft.Kinect;
+using System.Collections.Specialized;
 using System.Timers;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
+
 
 namespace MultipleKinectsPlatformClient
 {
@@ -25,8 +27,10 @@ namespace MultipleKinectsPlatformClient
         private Core platform;
         private System.Windows.Threading.DispatcherTimer frameRateTimer;
         private System.Windows.Threading.DispatcherTimer sensorsListRefreshTimer;
-        private double skeletonFramesRecv;
-        private double depthFramesRecv;
+        private double combinedSkeletonFramesRecv;
+        private double combinedDepthFramesRecv;
+        private Dictionary<string,int> individualSkeletonFrameRecv;
+        private Dictionary<string,int> individualDepthFrameRecv;
 
         public class SensorData
         {
@@ -55,8 +59,9 @@ namespace MultipleKinectsPlatformClient
             /* Create an MultiKinectPlatform object */
             this.platform = new Core();
 
-            depthFramesRecv = 0;
-            skeletonFramesRecv = 0;
+            combinedDepthFramesRecv = 0;
+            combinedSkeletonFramesRecv = 0;
+
             frameRateTimer = new System.Windows.Threading.DispatcherTimer();
             frameRateTimer.Tick += new EventHandler(FrameRateEvent);
             frameRateTimer.Interval = new TimeSpan(0,0,1);
@@ -78,12 +83,19 @@ namespace MultipleKinectsPlatformClient
         private void SensorsInitialisation()
         {
             List<KinectSensor> activeSensorList = this.platform.ListOfSensors();
+
+            this.individualDepthFrameRecv = new Dictionary<string, int>();
+            this.individualSkeletonFrameRecv = new Dictionary<string, int>();
  
             for (ushort sensorId = 0; sensorId < activeSensorList.Count; sensorId += 1)
             {
                 platform.GetDepthStream(sensorId, this.DepthImageReady);
 
                 platform.GetSkeletonStream(sensorId, this.SkeletonReady, true, "localhost");
+
+                individualDepthFrameRecv.Add(activeSensorList[sensorId].UniqueKinectId, 0);
+
+                individualSkeletonFrameRecv.Add(activeSensorList[sensorId].UniqueKinectId, 0);
             }
         }
 
@@ -139,8 +151,13 @@ namespace MultipleKinectsPlatformClient
 
         private void DepthImageReady(object sender, DepthReadyArgs e)
         {
-            this.depthFramesRecv += 1;
+            this.combinedDepthFramesRecv += 1;
 
+            int individualKinectDepthFrameRecv = (int)individualDepthFrameRecv[e.kinectId];
+            individualKinectDepthFrameRecv += 1;
+            individualDepthFrameRecv[e.kinectId] = individualKinectDepthFrameRecv;
+
+            /* Swap the view depending on the combo box selected value */
             if ((string)displaySensorMenu.SelectedValue == e.kinectId)
             {
                 this.imgMain.Source = e.depthImage;
@@ -150,7 +167,12 @@ namespace MultipleKinectsPlatformClient
 
         private void SkeletonReady(object sender, SkeletonReadyArgs e)
         {
-            skeletonFramesRecv += 1;
+            combinedSkeletonFramesRecv += 1;
+
+            int individualKinectSkeletonFrameRecv = (int) individualSkeletonFrameRecv[e.kinectId];
+            individualKinectSkeletonFrameRecv += 1;
+            individualSkeletonFrameRecv[e.kinectId] = individualKinectSkeletonFrameRecv;
+
         }
 
         protected override void OnClosed(EventArgs e)
@@ -166,11 +188,16 @@ namespace MultipleKinectsPlatformClient
 
         private void FrameRateEvent(object sender, EventArgs args)
         {
-            this.combinedDepthFrameRate.Content = depthFramesRecv + " fps";
-            this.combinedSkeletonFrameRate.Content = skeletonFramesRecv + " fps";
+            this.combinedDepthFrameRate.Content = combinedDepthFramesRecv + " fps";
+            this.combinedSkeletonFrameRate.Content = combinedSkeletonFramesRecv + " fps";
 
-            this.depthFramesRecv = 0;
-            this.skeletonFramesRecv = 0;
+            this.individualDepthFrameRate.Content = this.individualDepthFrameRecv[(string)displaySensorMenu.SelectedValue];
+            this.individualSkeletonFrameRate.Content = this.individualSkeletonFrameRecv[(string)displaySensorMenu.SelectedValue];
+
+            this.combinedDepthFramesRecv = 0;
+            this.combinedSkeletonFramesRecv = 0;
+            this.individualDepthFrameRecv[(string)displaySensorMenu.SelectedValue] = 0;
+            this.individualSkeletonFrameRecv[(string)displaySensorMenu.SelectedValue] = 0;
         }
 
         private void RefreshSensorList(object sender, EventArgs args)

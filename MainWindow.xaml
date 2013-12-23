@@ -23,12 +23,16 @@
                 <ColumnDefinition Width="35*"/>
                 <ColumnDefinition Width="256*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Display Sensor" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="246" Margin="0.149,0,0,0" Grid.Column="1"/>
-            <ComboBox x:Name="displaySensorMenu" Grid.Column="1" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="206" SelectedIndex="0"/>
-            <Label Content="Combined Frames Per Second (Depth)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="246" Margin="0,166,-22,0" Grid.Column="1"/>
-            <Label x:Name="combinedDepthFrameRate" Content="Not Avaliable" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="246" Margin="0,190,-22,0" Grid.Column="1" FontWeight="Bold" FontSize="14"/>
-            <Label Content="Combined Frames Per Second (Skeleton)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="246" Margin="0,220,-22,0" Grid.Column="1"/>
-            <Label x:Name="combinedSkeletonFrameRate" Content="Not Avaliable" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="246" Margin="0,244,-22,0" Grid.Column="1" FontWeight="Bold" FontSize="14"/>
+            <Label Content="Display Sensor" HorizontalAlignment="Left" VerticalAlignment="Top" Height="32" Width="246" Margin="0,0,-22,0" Grid.Column="1"/>
+            <ComboBox x:Name="displaySensorMenu" Grid.Column="1" HorizontalAlignment="Left" Margin="0,37,0,0" VerticalAlignment="Top" Width="214" SelectedIndex="0"/>
+            <Label Content="Combined Frames Per Second (Depth)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="246" Margin="0,198,-22,0" Grid.Column="1"/>
+            <Label x:Name="combinedDepthFrameRate" Content="Not Avaliable" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="246" Margin="0,222,-22,0" Grid.Column="1" FontWeight="Bold" FontSize="14"/>
+            <Label Content="Combined Frames Per Second (Skeleton)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="246" Margin="0,252,-22,0" Grid.Column="1"/>
+            <Label x:Name="combinedSkeletonFrameRate" Content="Not Avaliable" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="246" Margin="0,276,-22,0" Grid.Column="1" FontWeight="Bold" FontSize="14"/>
+            <Label Content="Frame Per Second (Depth)" Grid.Column="1" HorizontalAlignment="Left" Margin="0,76,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="individualDepthFrameRate" Content="Not Avaliable" Grid.Column="1" HorizontalAlignment="Left" Margin="0,102,-22,0" VerticalAlignment="Top" Height="30" Width="246" FontWeight="Bold" FontSize="14"/>
+            <Label Content="Frame Per Second (Skeleton)" Grid.Column="1" HorizontalAlignment="Left" Margin="0,132,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="individualSkeletonFrameRate" Content="Not Avaliable" Grid.Column="1" HorizontalAlignment="Left" Margin="0,158,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="125" Margin="0,535,0,0" VerticalAlignment="Top" Width="972">
             <ListView x:Name="sensorsList" HorizontalAlignment="Left" Height="68" Margin="35,29,0,0" VerticalAlignment="Top" Width="904">
