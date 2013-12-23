@@ -30,7 +30,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         public float pos_z;
 
         [DataMember]
-        public ushort clientId;
+        public uint clientId;
 
         [DataMember]
         public string sensorId;
@@ -38,7 +38,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         [DataMember]
         public string trackingMode;
 
-        public Skeleton(List<Joint> givenJoints,float i_x,float i_y,float i_z,ushort i_clientId,string i_sensorId,int i_skeletonId,string i_trackingMode)
+        public Skeleton(List<Joint> givenJoints,float i_x,float i_y,float i_z,uint i_clientId,string i_sensorId,int i_skeletonId,string i_trackingMode)
         {
             Joints = givenJoints;
             pos_x = i_x;
@@ -50,7 +50,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
             trackingMode = i_trackingMode;
         }
 
-        public static List<Skeleton> ConvertKinectSkeletons(Microsoft.Kinect.Skeleton[] obtainedSkeletons,ushort clientId, string kinectId)
+        public static List<Skeleton> ConvertKinectSkeletons(Microsoft.Kinect.Skeleton[] obtainedSkeletons,uint clientId, string kinectId)
         {
             List<Skeleton> convertedSkeletons = new List<Skeleton>();
 

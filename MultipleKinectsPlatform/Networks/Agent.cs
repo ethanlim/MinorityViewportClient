@@ -9,7 +9,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
     abstract class Agent
     {
         public abstract void SendData(string json);
-        public abstract uint RegisterClientId();
-        public abstract void DeregisterClient();
+        public abstract uint RegisterClientId(string physical_loc, string ip_addr);
+        public abstract void DeregisterClient(uint clientId);
     }
 }

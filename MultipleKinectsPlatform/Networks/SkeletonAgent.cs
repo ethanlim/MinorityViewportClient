@@ -5,8 +5,7 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 {
@@ -19,13 +18,16 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             HttpWebRequest httpForSensorData = null;
             WebResponse responseForSensorData = null;
 
-            bool retry=false;
+            uint failedAttempts = 0;
+            bool retry;
 
             do
             {
                 try
                 {
-                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint+"/sensors/data");
+                    retry = false;
+
+                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint+"/web/api/sensors/data.json");
 
                     httpForSensorData.Accept = "application/json";
                     httpForSensorData.ContentType = "application/json";
@@ -37,72 +39,51 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                 catch (WebException webex)
                 {
                     retry = true;
+                    failedAttempts += 1;
                 }
+                
             } while (retry);
 
-            if (responseForSensorData != null)
-            {
-                var stream = responseForSensorData.GetResponseStream();
-                var sr = new StreamReader(stream);
-                var content = sr.ReadToEnd();
-            }
+       
         }
 
-        public override uint RegisterClientId()
+        public override uint RegisterClientId(string physical_loc,string ip_addr)
         {
             uint givenClientId = 0;
 
-            HttpWebRequest httpToRequestForClientId = null;
-            WebResponse responseFromObtainedClientId = null;
+            HttpWebRequest httpToRequestForClientId = (HttpWebRequest)WebRequest.Create(this.endPoint + "/web/api/clients/register.json");
 
-            bool retry = false;
+            httpToRequestForClientId.Accept = "application/json";
+            httpToRequestForClientId.ContentType = "application/json";
+            httpToRequestForClientId.Method = "POST";
 
-            do
+            httpToRequestForClientId.Headers["PHYSICAL_LOC"] = physical_loc;
+            httpToRequestForClientId.Headers["IP_ADDR"] = ip_addr;
+
+            WebResponse responseFromObtainedClientId = httpToRequestForClientId.GetResponse();
+
+            if (responseFromObtainedClientId != null)
             {
-                try
-                {
-                    httpToRequestForClientId = (HttpWebRequest)WebRequest.Create(this.endPoint+"/client/new");
-
-                    httpToRequestForClientId.Accept = "application/json";
-                    httpToRequestForClientId.ContentType = "application/json";
-                    httpToRequestForClientId.Method = "POST";
-
-                    responseFromObtainedClientId = httpToRequestForClientId.GetResponse();
-                }
-                catch (WebException webex)
-                {
-                    retry = true;
-                }
-
-            } while (retry);
+                givenClientId = Convert.ToUInt32(responseFromObtainedClientId.Headers["ASSIGNED_CLIENT_ID"]);
+            }
+            else
+            {
+                givenClientId = 0;
+            }
 
             return givenClientId;
         }
 
-        public override void DeregisterClient()
+        public override void DeregisterClient(uint clientId)
         {
-            HttpWebRequest httpToDeregistration = null;
-            WebResponse responseFromDeregistration = null;
+            HttpWebRequest httpToDeregistration = (HttpWebRequest)WebRequest.Create(this.endPoint + "/web/api/clients/deregister.json");
 
-            bool retry = false;
+            httpToDeregistration.Accept = "application/json";
+            httpToDeregistration.ContentType = "application/json";
+            httpToDeregistration.Method = "POST";
+            httpToDeregistration.Headers["CLIENT_ID"] = clientId.ToString();
 
-            do
-            {
-                try
-                {
-                    httpToDeregistration = (HttpWebRequest)WebRequest.Create(this.endPoint + "/client/deregister");
-
-                    httpToDeregistration.Accept = "application/json";
-                    httpToDeregistration.ContentType = "application/json";
-                    httpToDeregistration.Method = "POST";
-
-                    responseFromDeregistration = httpToDeregistration.GetResponse();
-                }
-                catch (WebException webex)
-                {
-                    retry = true;
-                }
-            } while (retry);
+            WebResponse responseFromDeregistration = httpToDeregistration.GetResponse();
         }
     }
 }

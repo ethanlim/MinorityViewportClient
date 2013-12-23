@@ -25,6 +25,7 @@ namespace MultipleKinectsPlatformClient
     public partial class MainWindow : Window
     {
         private Core platform;
+        private System.Windows.Threading.DispatcherTimer clientIDTimer;
         private System.Windows.Threading.DispatcherTimer frameRateTimer;
         private System.Windows.Threading.DispatcherTimer sensorsListRefreshTimer;
         private double combinedSkeletonFramesRecv;
@@ -61,6 +62,11 @@ namespace MultipleKinectsPlatformClient
 
             combinedDepthFramesRecv = 0;
             combinedSkeletonFramesRecv = 0;
+
+            clientIDTimer = new System.Windows.Threading.DispatcherTimer();
+            clientIDTimer.Tick += new EventHandler(ClientIdCheckEvent);
+            clientIDTimer.Interval = new TimeSpan(0, 0, 1);
+            clientIDTimer.Start();
 
             frameRateTimer = new System.Windows.Threading.DispatcherTimer();
             frameRateTimer.Tick += new EventHandler(FrameRateEvent);
@@ -186,13 +192,31 @@ namespace MultipleKinectsPlatformClient
             Application.Current.Shutdown();
         }
 
+        private void ClientIdCheckEvent(object sender, EventArgs args)
+        {
+            uint obtainedClientId = platform.GetClientId();
+
+            if (obtainedClientId != 0)
+            {
+                this.clientId.Content = Convert.ToString(obtainedClientId);
+                clientIDTimer.Stop();
+            }
+            else
+            {
+                this.clientId.Content = "Failed to obtained client id, trying later";
+            }
+        }
+
         private void FrameRateEvent(object sender, EventArgs args)
         {
             this.combinedDepthFrameRate.Content = combinedDepthFramesRecv + " fps";
             this.combinedSkeletonFrameRate.Content = combinedSkeletonFramesRecv + " fps";
 
-            this.individualDepthFrameRate.Content = this.individualDepthFrameRecv[(string)displaySensorMenu.SelectedValue];
-            this.individualSkeletonFrameRate.Content = this.individualSkeletonFrameRecv[(string)displaySensorMenu.SelectedValue];
+            if (displaySensorMenu.SelectedValue != null)
+            {
+                this.individualDepthFrameRate.Content = this.individualDepthFrameRecv[(string)displaySensorMenu.SelectedValue];
+                this.individualSkeletonFrameRate.Content = this.individualSkeletonFrameRecv[(string)displaySensorMenu.SelectedValue];
+            }
 
             this.combinedDepthFramesRecv = 0;
             this.combinedSkeletonFramesRecv = 0;

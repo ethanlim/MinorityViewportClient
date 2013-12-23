@@ -48,5 +48,7 @@
             </ListView>
             <Label Content="Sensors" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="631" Margin="35,0,0,0"/>
         </Grid>
+        <Label Content="Client ID :" HorizontalAlignment="Left" Margin="34,4,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="clientId" Content="Not Avaliable" HorizontalAlignment="Left" Margin="100,3,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14" Height="26" Width="101"/>
     </Grid>
 </Window>

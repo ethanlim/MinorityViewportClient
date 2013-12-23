@@ -4,30 +4,38 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
-using Microsoft.Kinect;                                                 //Require the SDK Library
+using Microsoft.Kinect;
+using System.Net;                                                 //Require the SDK Library
 
 namespace MultipleKinectsPlatformClient
 {
     class Core
     {
-        private ushort clientId=0;
+        private uint clientId=0;
         private KinectManagers kinectMgr;
         private MultipleKinectsPlatform.Networks.NetworkManagers networkMgr;
-        private MultipleKinectsPlatform.Networks.Agent comAgent;
+        
         private event EventHandler<DepthReadyArgs> DepthReady;
         private event EventHandler<SkeletonReadyArgs> SkeletonReady;
         private bool sendSkeletonStreamEnabled = false;
+
+        private MultipleKinectsPlatform.Networks.Agent comAgent;
 
         public Core()
         {
             this.kinectMgr = new KinectManagers();
             this.kinectMgr.Shutdown();
             this.networkMgr = new MultipleKinectsPlatform.Networks.NetworkManagers();
+
+            this.comAgent = this.networkMgr.GetAgent(MultipleKinectsPlatform.Networks.NetworkManagers.AgentType.Skeleton);
         }
 
         ~Core()
         {
-
+            if (this.sendSkeletonStreamEnabled)
+            {
+                this.comAgent.DeregisterClient(this.clientId);
+            }
         }
         
         public void ShutDown()
@@ -50,12 +58,14 @@ namespace MultipleKinectsPlatformClient
 
             this.sendSkeletonStreamEnabled = sendStream;
 
-            if (this.sendSkeletonStreamEnabled)
-            {
-                this.comAgent = this.networkMgr.GetAgent(MultipleKinectsPlatform.Networks.NetworkManagers.AgentType.Skeleton);
-            }
-
             this.SkeletonReady = handler;
+        }
+
+        public uint GetClientId()
+        {
+            this.clientId = this.comAgent.RegisterClientId("Home", this.GetLocalIP());
+
+            return this.clientId;
         }
 
         public void StopStreams(ushort sensorId)
@@ -66,6 +76,22 @@ namespace MultipleKinectsPlatformClient
         public List<KinectSensor> ListOfSensors()
         {
             return this.kinectMgr.GetListOfSensors();
+        }
+
+        private string GetLocalIP()
+        {
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIP = ip.ToString();
+                }
+            }
+
+            return localIP;
         }
         
         /**
