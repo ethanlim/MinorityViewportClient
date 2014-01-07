@@ -78,6 +78,11 @@ namespace MultipleKinectsPlatformClient
             return this.kinectMgr.GetListOfSensors();
         }
 
+        public uint GetNumOfAvaliableSensors()
+        {
+            return (uint)this.kinectMgr.GetListOfSensors().Count;
+        }
+
         private string GetLocalIP()
         {
             IPHostEntry host;
