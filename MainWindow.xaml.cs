@@ -24,6 +24,7 @@ namespace MultipleKinectsPlatformClient
     public partial class MainWindow : Window
     {
         private Core platform;
+        private System.Windows.Threading.DispatcherTimer mainDisplayTimer;
         private System.Windows.Threading.DispatcherTimer clientIDTimer;
         private System.Windows.Threading.DispatcherTimer frameRateTimer;
         private System.Windows.Threading.DispatcherTimer sensorsListRefreshTimer;
@@ -58,6 +59,13 @@ namespace MultipleKinectsPlatformClient
 
             /* Create an MultiKinectPlatform object */
             this.platform = new Core();
+
+            mainDisplayTimer = new System.Windows.Threading.DispatcherTimer();
+            mainDisplayTimer.Tick += new EventHandler(DisplayTimerEvent);
+            mainDisplayTimer.Interval = new TimeSpan(0, 0, 1);
+
+            mainDisplayTimer.Start();
+
 
             clientIDTimer = new System.Windows.Threading.DispatcherTimer();
             clientIDTimer.Tick += new EventHandler(ClientIdCheckEvent);
@@ -204,6 +212,10 @@ namespace MultipleKinectsPlatformClient
         /**
          * Timer Events Handler 
          */
+        private void DisplayTimerEvent(object sender, EventArgs args)
+        {
+            this.mainTimer.Content = this.platform.curTime.ToString("G");
+        }
 
         private void ClientIdCheckEvent(object sender, EventArgs args)
         {

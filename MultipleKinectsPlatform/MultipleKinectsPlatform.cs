@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net;    
 using System.Windows.Media.Imaging;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
-using Microsoft.Kinect;
-using System.Net;                                                 //Require the SDK Library
+using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks;
+using Microsoft.Kinect;                                        //Require the SDK Library
 
 namespace MultipleKinectsPlatformClient
 {
     class Core
     {
+        public DateTime curTime;
+        private System.Windows.Threading.DispatcherTimer mainTimer;
+
         private uint clientId=0;
         private KinectManagers kinectMgr;
         private MultipleKinectsPlatform.Networks.NetworkManagers networkMgr;
@@ -23,6 +27,12 @@ namespace MultipleKinectsPlatformClient
 
         public Core()
         {
+            this.curTime = this.GetTimeFromServer();
+            mainTimer = new System.Windows.Threading.DispatcherTimer();
+            mainTimer.Tick += new EventHandler(MainTimerTick);
+            mainTimer.Interval = new TimeSpan(0, 0, 1);
+            mainTimer.Start();
+
             this.kinectMgr = new KinectManagers();
             this.kinectMgr.Shutdown();
             this.networkMgr = new MultipleKinectsPlatform.Networks.NetworkManagers();
@@ -98,7 +108,14 @@ namespace MultipleKinectsPlatformClient
 
             return localIP;
         }
-        
+
+        private DateTime GetTimeFromServer()
+        {
+            NTPClient timeClient = new NTPClient("0.nettime.pool.ntp.org");
+
+            return timeClient.GetTime();
+        }
+                
         /**
          *   Depth Data Ready Handler
          */ 
@@ -127,6 +144,11 @@ namespace MultipleKinectsPlatformClient
                     comAgent.SendData(skeletonJSON);
                 }
             }
+        }
+
+        private void MainTimerTick(object sender, EventArgs args)
+        {
+           this.curTime = this.curTime.AddSeconds(1);
         }
     }
 }
