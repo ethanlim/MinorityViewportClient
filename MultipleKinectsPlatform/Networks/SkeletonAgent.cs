@@ -27,7 +27,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                 {
                     retry = false;
 
-                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint+"/web/api/sensors/data.json");
+                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "/web/api/sensors/data.json");
 
                     httpForSensorData.Accept = "application/json";
                     httpForSensorData.ContentType = "application/json";
