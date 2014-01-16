@@ -13,7 +13,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
     {
         private Uri endPoint = new Uri("http://localhost:1626");
         
-        public override void SendData(string json)
+        public override void SendData(string json,DateTime curTime)
         {
             HttpWebRequest httpForSensorData = null;
             WebResponse responseForSensorData = null;
@@ -33,6 +33,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                     httpForSensorData.ContentType = "application/json";
                     httpForSensorData.Method = "POST";
                     httpForSensorData.Headers["SENSOR_JSON"] = json;            //pack json in header
+                    httpForSensorData.Headers["TIME_STAMP"] = ((Int32)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString();
 
                     responseForSensorData = httpForSensorData.GetResponse();
                 }

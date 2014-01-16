@@ -141,7 +141,7 @@ namespace MultipleKinectsPlatformClient
 
                 if (!skeletonJSON.Equals(""))
                 {
-                    comAgent.SendData(skeletonJSON);
+                    comAgent.SendData(skeletonJSON,curTime);
                 }
             }
         }
