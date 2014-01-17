@@ -27,7 +27,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                 {
                     retry = false;
 
-                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "/web/api/sensors/data.json");
+                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/sensors/data.json");
 
                     httpForSensorData.Accept = "application/json";
                     httpForSensorData.ContentType = "application/json";
@@ -52,7 +52,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         {
             uint givenClientId = 0;
             WebResponse responseFromObtainedClientId = null;
-            HttpWebRequest httpToRequestForClientId = (HttpWebRequest)WebRequest.Create(this.endPoint + "/web/api/clients/register.json");
+            HttpWebRequest httpToRequestForClientId = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/clients/register.json");
 
             httpToRequestForClientId.Accept = "application/json";
             httpToRequestForClientId.ContentType = "application/json";
@@ -85,7 +85,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 
         public override void DeregisterClient(uint clientId)
         {
-            HttpWebRequest httpToDeregistration = (HttpWebRequest)WebRequest.Create(this.endPoint + "/web/api/clients/deregister.json");
+            HttpWebRequest httpToDeregistration = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/clients/deregister.json");
 
             httpToDeregistration.Accept = "application/json";
             httpToDeregistration.ContentType = "application/json";
