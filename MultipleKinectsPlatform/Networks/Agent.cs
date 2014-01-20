@@ -11,5 +11,6 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         public abstract void SendData(string json,DateTime curTime);
         public abstract uint RegisterClientId(string physical_loc, string ip_addr);
         public abstract void DeregisterClient(uint clientId);
+        public abstract void RegisterSensorsUniqueId(string sensorList_JSON, uint clientId);
     }
 }

@@ -36,8 +36,16 @@ namespace MultipleKinectsPlatformClient
             this.kinectMgr = new KinectManagers();
             this.kinectMgr.Shutdown();
             this.networkMgr = new MultipleKinectsPlatform.Networks.NetworkManagers();
-
+            
             this.comAgent = this.networkMgr.GetAgent(MultipleKinectsPlatform.Networks.NetworkManagers.AgentType.Skeleton);
+
+            this.clientId = this.comAgent.RegisterClientId("Home", this.GetLocalIP());
+            this.comAgent.RegisterSensorsUniqueId(
+                                            this.ExtractSensorId_JSON(
+                                                 this.kinectMgr.GetListOfSensors()
+                                            ),
+                                            this.clientId
+            );
         }
 
         ~Core()
@@ -73,11 +81,40 @@ namespace MultipleKinectsPlatformClient
 
         public uint GetClientId()
         {
-            this.clientId = this.comAgent.RegisterClientId("Home", this.GetLocalIP());
-
             return this.clientId;
         }
 
+        private string ExtractSensorId_JSON(List<KinectSensor> kinects)
+        {
+            string KinectIds = "";
+
+            KinectIds += "{";
+            KinectIds += "\"Sensors\":";
+            KinectIds += "[";
+
+            for(int kinect=0;kinect<kinects.Count;kinect+=1)
+            {
+                KinectIds += "{";
+                KinectIds += "\"id\":";
+
+                string escapedKinectId = kinects[kinect].UniqueKinectId.Replace("\\", "\\\\");
+
+                KinectIds += "\"" + escapedKinectId + "\"";
+
+                KinectIds += "}";
+
+                if (kinect != kinects.Count-1)
+                {
+                    KinectIds += ",";
+                }
+            }
+
+            KinectIds += "]";
+            KinectIds += "}";
+
+            return KinectIds;
+        }
+        
         public void StopStreams(ushort sensorId)
         {
             this.kinectMgr.StopStreams(sensorId);

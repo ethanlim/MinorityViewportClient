@@ -30,6 +30,7 @@ namespace MultipleKinectsPlatformClient
         private System.Windows.Threading.DispatcherTimer sensorsListRefreshTimer;
         private double combinedSkeletonFramesRecv=0;
         private double combinedDepthFramesRecv=0;
+
         private Dictionary<string,int> individualSkeletonFrameRecv;
         private Dictionary<string,int> individualDepthFrameRecv;
 
@@ -241,12 +242,14 @@ namespace MultipleKinectsPlatformClient
             {
                 this.individualDepthFrameRate.Content = this.individualDepthFrameRecv[(string)displaySensorMenu.SelectedValue];
                 this.individualSkeletonFrameRate.Content = this.individualSkeletonFrameRecv[(string)displaySensorMenu.SelectedValue];
+
+                this.individualDepthFrameRecv[(string)displaySensorMenu.SelectedValue] = 0;
+                this.individualSkeletonFrameRecv[(string)displaySensorMenu.SelectedValue] = 0;
             }
 
+            // Reset the counters
             this.combinedDepthFramesRecv = 0;
             this.combinedSkeletonFramesRecv = 0;
-            this.individualDepthFrameRecv[(string)displaySensorMenu.SelectedValue] = 0;
-            this.individualSkeletonFrameRecv[(string)displaySensorMenu.SelectedValue] = 0;
         }
 
         private void RefreshSensorList(object sender, EventArgs args)

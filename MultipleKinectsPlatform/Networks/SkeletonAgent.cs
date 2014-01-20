@@ -13,7 +13,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
     {
         private Uri endPoint = new Uri("http://localhost:1626");
         
-        public override void SendData(string json,DateTime curTime)
+        public override void SendData(string sensorData_JSON, DateTime curTime)
         {
             HttpWebRequest httpForSensorData = null;
             WebResponse responseForSensorData = null;
@@ -32,7 +32,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                     httpForSensorData.Accept = "application/json";
                     httpForSensorData.ContentType = "application/json";
                     httpForSensorData.Method = "POST";
-                    httpForSensorData.Headers["SENSOR_JSON"] = json;            //pack json in header
+                    httpForSensorData.Headers["SENSOR_JSON"] = sensorData_JSON;            //pack json in header
                     httpForSensorData.Headers["TIME_STAMP"] = ((Int32)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString();
 
                     responseForSensorData = httpForSensorData.GetResponse();
@@ -95,6 +95,27 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             try
             {
                 WebResponse responseFromDeregistration = httpToDeregistration.GetResponse();
+            }
+            catch (WebException webex)
+            {
+                Console.Write(webex.Message);
+            }
+        }
+
+        public override void RegisterSensorsUniqueId(string sensorList_JSON, uint clientId)
+        {
+            HttpWebRequest httpToRequestToSendSensorList = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/sensors/register.json");
+
+            httpToRequestToSendSensorList.Accept = "application/json";
+            httpToRequestToSendSensorList.ContentType = "application/json";
+            httpToRequestToSendSensorList.Method = "POST";
+
+            httpToRequestToSendSensorList.Headers["SENSOR_LIST"] = sensorList_JSON;
+            httpToRequestToSendSensorList.Headers["CLIENT_ID"] = clientId.ToString();
+
+            try
+            {
+                httpToRequestToSendSensorList.GetResponse();
             }
             catch (WebException webex)
             {
