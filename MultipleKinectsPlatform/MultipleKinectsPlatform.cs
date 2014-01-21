@@ -148,7 +148,7 @@ namespace MultipleKinectsPlatformClient
 
         private DateTime GetTimeFromServer()
         {
-            NTPClient timeClient = new NTPClient("0.nettime.pool.ntp.org");
+            NTPClient timeClient = new NTPClient("sg.pool.ntp.org");
 
             return timeClient.GetTime();
         }
