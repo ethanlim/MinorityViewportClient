@@ -168,12 +168,12 @@ namespace MultipleKinectsPlatformClient
 
             if(convertedSkeletons.Count>0){
 
-                string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
-
                 BackgroundWorker worker = new BackgroundWorker();
 
                 worker.DoWork += delegate(object s, DoWorkEventArgs args)
                 {
+                    string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
+
                     comAgent.SendData(skeletonJSON, curTime);
                 };
 
