@@ -64,9 +64,7 @@ namespace MultipleKinectsPlatformClient
             mainDisplayTimer = new System.Windows.Threading.DispatcherTimer();
             mainDisplayTimer.Tick += new EventHandler(DisplayTimerEvent);
             mainDisplayTimer.Interval = new TimeSpan(0, 0, 1);
-
             mainDisplayTimer.Start();
-
 
             clientIDTimer = new System.Windows.Threading.DispatcherTimer();
             clientIDTimer.Tick += new EventHandler(ClientIdCheckEvent);
@@ -112,7 +110,7 @@ namespace MultipleKinectsPlatformClient
             {
                 platform.GetDepthStream(sensorId, this.DepthImageReady);
 
-                platform.GetSkeletonStream(sensorId, this.SkeletonReady, true, "localhost");
+                platform.GetSkeletonStream(sensorId, this.SkeletonReady,"localhost");
 
                 individualDepthFrameRecv.Add(activeSensorList[sensorId].UniqueKinectId, 0);
 
@@ -187,24 +185,23 @@ namespace MultipleKinectsPlatformClient
  
         private void DepthImageReady(object sender, DepthReadyArgs e)
         {
+            /* Depth Frame Statistics */
             this.combinedDepthFramesRecv += 1;
-
             int individualKinectDepthFrameRecv = (int)individualDepthFrameRecv[e.kinectId];
             individualKinectDepthFrameRecv += 1;
             individualDepthFrameRecv[e.kinectId] = individualKinectDepthFrameRecv;
 
-            /* Swap the view depending on the combo box selected value */
+            /* Swap the depth view depending on the combo box selected value */
             if ((string)displaySensorMenu.SelectedValue == e.kinectId)
             {
                 this.imgMain.Source = e.depthImage;
             }
-
         }
 
         private void SkeletonReady(object sender, SkeletonReadyArgs e)
         {
+            /* Skeleton Frame Statistics */
             combinedSkeletonFramesRecv += 1;
-
             int individualKinectSkeletonFrameRecv = (int)individualSkeletonFrameRecv[e.kinectId];
             individualKinectSkeletonFrameRecv += 1;
             individualSkeletonFrameRecv[e.kinectId] = individualKinectSkeletonFrameRecv;
@@ -258,6 +255,5 @@ namespace MultipleKinectsPlatformClient
 
             this.PopulateSensorSelection(false);
         }
-
     }
 }

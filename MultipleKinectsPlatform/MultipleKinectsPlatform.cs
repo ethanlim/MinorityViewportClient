@@ -6,7 +6,9 @@ using System.Windows.Media.Imaging;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks;
-using Microsoft.Kinect;                                        //Require the SDK Library
+using Microsoft.Kinect;
+using System.Threading;
+using System.ComponentModel;                                        //Require the SDK Library
 
 namespace MultipleKinectsPlatformClient
 {
@@ -21,7 +23,6 @@ namespace MultipleKinectsPlatformClient
         
         private event EventHandler<DepthReadyArgs> DepthReady;
         private event EventHandler<SkeletonReadyArgs> SkeletonReady;
-        private bool sendSkeletonStreamEnabled = false;
 
         private MultipleKinectsPlatform.Networks.Agent comAgent;
 
@@ -50,10 +51,7 @@ namespace MultipleKinectsPlatformClient
 
         ~Core()
         {
-            if (this.sendSkeletonStreamEnabled)
-            {
-                this.comAgent.DeregisterClient(this.clientId);
-            }
+            this.comAgent.DeregisterClient(this.clientId);
         }
         
         public void ShutDown()
@@ -68,14 +66,12 @@ namespace MultipleKinectsPlatformClient
             this.DepthReady += handler;
         }
 
-        public void GetSkeletonStream(ushort sensorId, EventHandler<SkeletonReadyArgs> handler,bool sendStream,string URL)
+        public void GetSkeletonStream(ushort sensorId, EventHandler<SkeletonReadyArgs> handler,string URL)
         {
             TransformSmoothParameters param = new TransformSmoothParameters();
 
             this.kinectMgr.SkeletonFromSensor(sensorId, param,this.SkeletonEventHandler);
-
-            this.sendSkeletonStreamEnabled = sendStream;
-
+            
             this.SkeletonReady = handler;
         }
 
@@ -166,20 +162,22 @@ namespace MultipleKinectsPlatformClient
          */ 
         private void SkeletonEventHandler(object sender, SkeletonReadyArgs e)
         {
-            this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons,kinectId=e.kinectId});
+            this.SkeletonReady(sender, new SkeletonReadyArgs {defaultEventArg = e,allSkeletons = e.allSkeletons,kinectId=e.kinectId});
 
-            Microsoft.Kinect.Skeleton[] obtainedSkeletons = e.allSkeletons;
+            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeletons = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(e.allSkeletons, this.clientId, e.kinectId);
 
-            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeletons = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(obtainedSkeletons,this.clientId,e.kinectId);
+            if(convertedSkeletons.Count>0){
 
-            if(this.sendSkeletonStreamEnabled)
-            {
                 string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
 
-                if (!skeletonJSON.Equals(""))
+                BackgroundWorker worker = new BackgroundWorker();
+
+                worker.DoWork += delegate(object s, DoWorkEventArgs args)
                 {
-                    comAgent.SendData(skeletonJSON,curTime);
-                }
+                    comAgent.SendData(skeletonJSON, curTime);
+                };
+
+                worker.RunWorkerAsync();
             }
         }
 

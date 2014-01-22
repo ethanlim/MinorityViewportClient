@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.Threading;
 
 namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 {
@@ -15,69 +14,58 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         
         public override void SendData(string sensorData_JSON, DateTime curTime)
         {
-            HttpWebRequest httpForSensorData = null;
-            WebResponse responseForSensorData = null;
-
-            uint failedAttempts = 0;
-            bool retry;
-
-            do
+            try
             {
-                try
-                {
-                    retry = false;
+                HttpWebRequest httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/sensors/data.json");
 
-                    httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/sensors/data.json");
+                httpForSensorData.Accept = "application/json";
+                httpForSensorData.ContentType = "application/json";
+                httpForSensorData.Method = "POST";
+                httpForSensorData.Headers["SENSOR_JSON"] = sensorData_JSON;            //pack json in header
+                httpForSensorData.Headers["TIME_STAMP"] = ((Int32)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString();
 
-                    httpForSensorData.Accept = "application/json";
-                    httpForSensorData.ContentType = "application/json";
-                    httpForSensorData.Method = "POST";
-                    httpForSensorData.Headers["SENSOR_JSON"] = sensorData_JSON;            //pack json in header
-                    httpForSensorData.Headers["TIME_STAMP"] = ((Int32)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString();
-
-                    responseForSensorData = httpForSensorData.GetResponse();
-                }
-                catch (WebException webex)
-                {
-                    retry = true;
-                    failedAttempts += 1;
-                }
-                
-            } while (retry);
-
-       
-        }
-
-        public override uint RegisterClientId(string physical_loc,string ip_addr)
-        {
-            uint givenClientId = 0;
-            WebResponse responseFromObtainedClientId = null;
-            HttpWebRequest httpToRequestForClientId = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/clients/register.json");
-
-            httpToRequestForClientId.Accept = "application/json";
-            httpToRequestForClientId.ContentType = "application/json";
-            httpToRequestForClientId.Method = "POST";
-
-            httpToRequestForClientId.Headers["PHYSICAL_LOC"] = physical_loc;
-            httpToRequestForClientId.Headers["IP_ADDR"] = ip_addr;
-
-            try{
-               
-                responseFromObtainedClientId = httpToRequestForClientId.GetResponse();
-
+                httpForSensorData.GetResponse();
             }
             catch (WebException webex)
             {
                 Console.Write(webex.Message);
             }
-
-            if (responseFromObtainedClientId != null)
+            catch (Exception ex)
             {
-                givenClientId = Convert.ToUInt32(responseFromObtainedClientId.Headers["ASSIGNED_CLIENT_ID"]);
+                Console.Write(ex.Message);
             }
-            else
+                
+        }
+
+        public override uint RegisterClientId(string physical_loc,string ip_addr)
+        {
+            uint givenClientId = 0;
+
+            try
             {
-                givenClientId = 0;
+                HttpWebRequest request = WebRequest.Create(this.endPoint + "api/clients/register.json") as HttpWebRequest;
+
+                request.Method = "POST";
+
+                request.Headers["PHYSICAL_LOC"] = physical_loc;
+                request.Headers["IP_ADDR"] = ip_addr;
+
+                WebResponse response = request.GetResponse();
+
+                StreamReader streamReader = new StreamReader(response.GetResponseStream());
+                String responseData = streamReader.ReadToEnd();
+                String rawClientId = responseData.Substring(responseData.LastIndexOf(':') + 1);
+                rawClientId = rawClientId.Remove(rawClientId.Length - 1);
+
+                givenClientId = Convert.ToUInt32(rawClientId);
+            }
+            catch (WebException webex)
+            {
+                Console.Write(webex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
             }
 
             return givenClientId;
@@ -94,11 +82,15 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 
             try
             {
-                WebResponse responseFromDeregistration = httpToDeregistration.GetResponse();
+               httpToDeregistration.GetResponse();
             }
             catch (WebException webex)
             {
                 Console.Write(webex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
             }
         }
 
@@ -120,6 +112,10 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             catch (WebException webex)
             {
                 Console.Write(webex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
             }
         }
     }
