@@ -28,7 +28,15 @@ namespace MultipleKinectsPlatformClient
 
         public Core()
         {
-            this.curTime = this.GetTimeFromServer();
+            try
+            {
+                this.curTime = this.GetTimeFromServer();
+            }
+            catch (Exception ServerTimeException)
+            {
+                 /* TODO : Implement fail safe if connecting to time server fails */
+            }
+
             mainTimer = new System.Windows.Threading.DispatcherTimer();
             mainTimer.Tick += new EventHandler(MainTimerTick);
             mainTimer.Interval = new TimeSpan(0, 0, 1);
