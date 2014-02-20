@@ -14,11 +14,11 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
     [DataContract(Name="Skeleton")]
     public class Skeleton
     {
-        [DataMember(Name="Joints")]
+        [DataMember(Name="joints")]
         public List<Joint> Joints;
 
         [DataMember]
-        public int skeletonId;
+        public int skeleton_id;
 
         [DataMember]
         public float pos_x;
@@ -30,10 +30,10 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
         public float pos_z;
 
         [DataMember]
-        public uint clientId;
+        public uint client_id;
 
         [DataMember]
-        public string sensorId;
+        public string sensor_id;
 
         [DataMember]
         public string trackingMode;
@@ -44,9 +44,9 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
             pos_x = i_x;
             pos_y = i_y;
             pos_z = i_z;
-            clientId = i_clientId;
-            sensorId = i_sensorId;
-            skeletonId = i_skeletonId;
+            client_id = i_clientId;
+            sensor_id = i_sensorId;
+            skeleton_id = i_skeletonId;
             trackingMode = i_trackingMode;
         }
 
