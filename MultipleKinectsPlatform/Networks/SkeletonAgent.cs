@@ -17,7 +17,11 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             try
             {
                 HttpWebRequest httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/sensors/data.json");
+                
+                ServicePointManager.DefaultConnectionLimit = 20;
+                ServicePointManager.Expect100Continue = false;
 
+                httpForSensorData.Proxy = null;
                 httpForSensorData.Accept = "application/json";
                 httpForSensorData.ContentType = "application/json";
                 httpForSensorData.Method = "POST";
@@ -46,7 +50,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                 HttpWebRequest request = WebRequest.Create(this.endPoint + "api/clients/register.json") as HttpWebRequest;
 
                 request.Method = "POST";
-
+                request.Proxy = null;
                 request.Headers["PHYSICAL_LOC"] = physical_loc;
                 request.Headers["IP_ADDR"] = ip_addr;
 
@@ -75,6 +79,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         {
             HttpWebRequest httpToDeregistration = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/clients/deregister.json");
 
+            httpToDeregistration.Proxy = null;
             httpToDeregistration.Accept = "application/json";
             httpToDeregistration.ContentType = "application/json";
             httpToDeregistration.Method = "POST";
@@ -101,7 +106,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             httpToRequestToSendSensorList.Accept = "application/json";
             httpToRequestToSendSensorList.ContentType = "application/json";
             httpToRequestToSendSensorList.Method = "POST";
-
+            httpToRequestToSendSensorList.Proxy = null;
             httpToRequestToSendSensorList.Headers["SENSOR_LIST"] = sensorList_JSON;
             httpToRequestToSendSensorList.Headers["CLIENT_ID"] = clientId.ToString();
 
