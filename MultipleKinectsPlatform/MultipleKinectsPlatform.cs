@@ -174,19 +174,26 @@ namespace MultipleKinectsPlatformClient
 
             List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeletons = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(e.allSkeletons, this.clientId, e.kinectId);
 
+
+            /****** Trade off if put this into background worker => Too Slow frame rate  *******/
+            string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
+
+            comAgent.SendData(skeletonJSON, curTime);
+
+            /*********** Background worker ********************************/
+            /*
             if(convertedSkeletons.Count>0){
 
                 BackgroundWorker worker = new BackgroundWorker();
 
                 worker.DoWork += delegate(object s, DoWorkEventArgs args)
                 {
-                    string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
-
-                    comAgent.SendData(skeletonJSON, curTime);
+                     Put the above two lines here if not to affect the UI 
                 };
 
                 worker.RunWorkerAsync();
             }
+            */
         }
 
         private void MainTimerTick(object sender, EventArgs args)

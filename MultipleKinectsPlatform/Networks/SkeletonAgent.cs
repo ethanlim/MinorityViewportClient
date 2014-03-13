@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.Text;
 
 namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 {
@@ -17,18 +19,25 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             try
             {
                 HttpWebRequest httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/sensors/data.json");
-                
-                ServicePointManager.DefaultConnectionLimit = 20;
-                ServicePointManager.Expect100Continue = false;
 
+                ServicePointManager.DefaultConnectionLimit = 20;
+                ServicePointManager.UseNagleAlgorithm = false;
+                httpForSensorData.ServicePoint.Expect100Continue = false;
                 httpForSensorData.Proxy = null;
+                httpForSensorData.KeepAlive = true;
+                httpForSensorData.PreAuthenticate = false;
+                System.Net.ServicePointManager.CheckCertificateRevocationList = false;
+
                 httpForSensorData.Accept = "application/json";
                 httpForSensorData.ContentType = "application/json";
                 httpForSensorData.Method = "POST";
+
                 httpForSensorData.Headers["SENSOR_JSON"] = sensorData_JSON;            //pack json in header
                 httpForSensorData.Headers["TIME_STAMP"] = ((Int32)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString();
-
-                httpForSensorData.GetResponse();
+             
+                using (WebResponse response = (HttpWebResponse) httpForSensorData.GetResponse())
+                {
+                }
             }
             catch (WebException webex)
             {
@@ -38,7 +47,6 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             {
                 Console.Write(ex.Message);
             }
-                
         }
 
         public override uint RegisterClientId(string physical_loc,string ip_addr)
