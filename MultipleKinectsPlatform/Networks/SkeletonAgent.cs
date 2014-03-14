@@ -12,12 +12,40 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 {
     class SkeletonAgent : Agent
     {
-        private Uri endPoint = new Uri("http://localhost:1626");
+        private ushort httpPort;
+        private String host;
+
+        private ushort udpPort;
+
+        private Uri endPoint; 
+
+        public SkeletonAgent()
+        {
+            this.httpPort = 1626;
+            this.host = "localhost";
+
+            this.udpPort = 1625;
+
+            this.endPoint = new Uri("http://"+this.host+":"+httpPort);
+        }
         
         public override void SendData(string sensorData_JSON, DateTime curTime)
         {
             try
             {
+                UdpClient client = new UdpClient("127.0.0.1",this.udpPort);
+
+                String package = "{" + "\"TIME_STAMP\"" + ":" + ((Int32)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString() + "," +
+                                       "\"SENSOR_JSON\"" + ":" + sensorData_JSON +
+                                 "}";
+
+                byte[] sdata = Encoding.ASCII.GetBytes(package);
+
+                client.Send(sdata,sdata.Length);
+
+
+                /************ Working Code for HTTP Request => Too Slow ************************************/
+                /*
                 HttpWebRequest httpForSensorData = (HttpWebRequest)WebRequest.Create(this.endPoint + "api/sensors/data.json");
 
                 ServicePointManager.DefaultConnectionLimit = 20;
@@ -38,6 +66,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                 using (WebResponse response = (HttpWebResponse) httpForSensorData.GetResponse())
                 {
                 }
+                */
             }
             catch (WebException webex)
             {

@@ -170,12 +170,9 @@ namespace MultipleKinectsPlatformClient
          */ 
         private void SkeletonEventHandler(object sender, SkeletonReadyArgs e)
         {
-            this.SkeletonReady(sender, new SkeletonReadyArgs {defaultEventArg = e,allSkeletons = e.allSkeletons,kinectId=e.kinectId});
-
             List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeletons = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(e.allSkeletons, this.clientId, e.kinectId);
 
-
-            /****** Trade off if put this into background worker => Too Slow frame rate  *******/
+            /****** Trade off if put this into background worker => Too slow frame rate  *******/
             string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
 
             comAgent.SendData(skeletonJSON, curTime);
@@ -188,12 +185,14 @@ namespace MultipleKinectsPlatformClient
 
                 worker.DoWork += delegate(object s, DoWorkEventArgs args)
                 {
-                     Put the above two lines here if not to affect the UI 
+                                
                 };
 
                 worker.RunWorkerAsync();
             }
             */
+
+            //this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons, kinectId = e.kinectId });
         }
 
         private void MainTimerTick(object sender, EventArgs args)
