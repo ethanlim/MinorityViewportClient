@@ -62,6 +62,7 @@ namespace MultipleKinectsPlatformClient
 
             this.stopwatchDiagnostic = new Stopwatch();
             this.timingFile = new System.IO.StreamWriter(@"Timings.txt", false);
+            this.timingFile.WriteLine((1000L * 1000L * 1000L) / Stopwatch.Frequency);
             this.timingFile.Close();
         }
 
@@ -178,8 +179,11 @@ namespace MultipleKinectsPlatformClient
          */ 
         private void SkeletonEventHandler(object sender, SkeletonReadyArgs e)
         {
+            String timingLine = "";
+
             using (timingFile = new System.IO.StreamWriter(@"Timings.txt", true))
             {
+
                 stopwatchDiagnostic.Reset();
                 stopwatchDiagnostic.Start();
 
@@ -188,45 +192,50 @@ namespace MultipleKinectsPlatformClient
                 stopwatchDiagnostic.Stop();
                 long elapsed_time = stopwatchDiagnostic.ElapsedTicks;
 
-                timingFile.WriteLine("Convertion (Kinect Skeleton to Object) Time Taken (ticks) : " + elapsed_time.ToString());
+                if (convertedSkeletons.Count > 0)
+                {
+                    timingLine += elapsed_time.ToString() + ",";
 
-                stopwatchDiagnostic.Reset();
-                stopwatchDiagnostic.Start();
+                    stopwatchDiagnostic.Reset();
+                    stopwatchDiagnostic.Start();
 
-                /****** Trade off if put this into background worker => Too slow frame rate  *******/
-                string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
+                    /****** Trade off if put this into background worker => Too slow frame rate  *******/
+                    string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
 
-                stopwatchDiagnostic.Stop();
-                elapsed_time = stopwatchDiagnostic.ElapsedTicks;
+                    stopwatchDiagnostic.Stop();
+                    elapsed_time = stopwatchDiagnostic.ElapsedTicks;
 
-                timingFile.WriteLine("Convertion (Object to JSON) Time Taken (ticks) : " + elapsed_time.ToString());
+                    timingLine += elapsed_time.ToString() + ",";
 
-                stopwatchDiagnostic.Reset();
-                stopwatchDiagnostic.Start();
+                    stopwatchDiagnostic.Reset();
+                    stopwatchDiagnostic.Start();
 
-                comAgent.SendData(skeletonJSON, curTime);
+                    comAgent.SendData(skeletonJSON, curTime);
 
-                stopwatchDiagnostic.Stop();
-                elapsed_time = stopwatchDiagnostic.ElapsedTicks;
+                    stopwatchDiagnostic.Stop();
+                    elapsed_time = stopwatchDiagnostic.ElapsedTicks;
 
-                timingFile.WriteLine("Send Data Time Taken (ticks) : " + elapsed_time.ToString());
+                    timingLine += elapsed_time.ToString();
 
-                /*********** Background worker ********************************/
-                /*
-                if(convertedSkeletons.Count>0){
+                    /*********** Background worker ********************************/
+                    /*
+                    if(convertedSkeletons.Count>0){
 
-                    BackgroundWorker worker = new BackgroundWorker();
+                        BackgroundWorker worker = new BackgroundWorker();
 
-                    worker.DoWork += delegate(object s, DoWorkEventArgs args)
-                    {
+                        worker.DoWork += delegate(object s, DoWorkEventArgs args)
+                        {
                                 
-                    };
+                        };
 
-                    worker.RunWorkerAsync();
+                        worker.RunWorkerAsync();
+                    }
+                    */
+
+                    //this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons, kinectId = e.kinectId });
+
+                    timingFile.WriteLine(timingLine);
                 }
-                */
-
-                //this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons, kinectId = e.kinectId });
             }
     
         }
