@@ -35,7 +35,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             {
                 UdpClient client = new UdpClient("127.0.0.1",this.udpPort);
 
-                String package = "{" + "\"TIME_STAMP\"" + ":" + ((Int32)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString() + "," +
+                String package = "{" + "\"TIME_STAMP\"" + ":" + ((Int32)(curTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString() + "," +
                                        "\"SENSOR_JSON\"" + ":" + sensorData_JSON +
                                  "}";
 

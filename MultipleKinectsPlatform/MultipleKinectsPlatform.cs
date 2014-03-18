@@ -8,6 +8,7 @@ using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
 using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks;
 using Microsoft.Kinect;
 using System.Threading;
+using System.Diagnostics;
 using System.ComponentModel;                                        //Require the SDK Library
 
 namespace MultipleKinectsPlatformClient
@@ -25,6 +26,9 @@ namespace MultipleKinectsPlatformClient
         private event EventHandler<SkeletonReadyArgs> SkeletonReady;
 
         private MultipleKinectsPlatform.Networks.Agent comAgent;
+
+        private Stopwatch stopwatchDiagnostic;
+        private System.IO.StreamWriter timingFile;
 
         public Core()
         {
@@ -55,6 +59,10 @@ namespace MultipleKinectsPlatformClient
                                             ),
                                             this.clientId
             );
+
+            this.stopwatchDiagnostic = new Stopwatch();
+            this.timingFile = new System.IO.StreamWriter(@"Timings.txt", false);
+            this.timingFile.Close();
         }
 
         ~Core()
@@ -170,29 +178,57 @@ namespace MultipleKinectsPlatformClient
          */ 
         private void SkeletonEventHandler(object sender, SkeletonReadyArgs e)
         {
-            List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeletons = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(e.allSkeletons, this.clientId, e.kinectId);
+            using (timingFile = new System.IO.StreamWriter(@"Timings.txt", true))
+            {
+                stopwatchDiagnostic.Reset();
+                stopwatchDiagnostic.Start();
 
-            /****** Trade off if put this into background worker => Too slow frame rate  *******/
-            string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
+                List<MultipleKinectsPlatform.Data.Skeleton> convertedSkeletons = MultipleKinectsPlatform.Data.Skeleton.ConvertKinectSkeletons(e.allSkeletons, this.clientId, e.kinectId);
 
-            comAgent.SendData(skeletonJSON, curTime);
+                stopwatchDiagnostic.Stop();
+                long elapsed_time = stopwatchDiagnostic.ElapsedTicks;
 
-            /*********** Background worker ********************************/
-            /*
-            if(convertedSkeletons.Count>0){
+                timingFile.WriteLine("Convertion (Kinect Skeleton to Object) Time Taken (ticks) : " + elapsed_time.ToString());
 
-                BackgroundWorker worker = new BackgroundWorker();
+                stopwatchDiagnostic.Reset();
+                stopwatchDiagnostic.Start();
 
-                worker.DoWork += delegate(object s, DoWorkEventArgs args)
-                {
+                /****** Trade off if put this into background worker => Too slow frame rate  *******/
+                string skeletonJSON = MultipleKinectsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
+
+                stopwatchDiagnostic.Stop();
+                elapsed_time = stopwatchDiagnostic.ElapsedTicks;
+
+                timingFile.WriteLine("Convertion (Object to JSON) Time Taken (ticks) : " + elapsed_time.ToString());
+
+                stopwatchDiagnostic.Reset();
+                stopwatchDiagnostic.Start();
+
+                comAgent.SendData(skeletonJSON, curTime);
+
+                stopwatchDiagnostic.Stop();
+                elapsed_time = stopwatchDiagnostic.ElapsedTicks;
+
+                timingFile.WriteLine("Send Data Time Taken (ticks) : " + elapsed_time.ToString());
+
+                /*********** Background worker ********************************/
+                /*
+                if(convertedSkeletons.Count>0){
+
+                    BackgroundWorker worker = new BackgroundWorker();
+
+                    worker.DoWork += delegate(object s, DoWorkEventArgs args)
+                    {
                                 
-                };
+                    };
 
-                worker.RunWorkerAsync();
+                    worker.RunWorkerAsync();
+                }
+                */
+
+                //this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons, kinectId = e.kinectId });
             }
-            */
-
-            //this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons, kinectId = e.kinectId });
+    
         }
 
         private void MainTimerTick(object sender, EventArgs args)
