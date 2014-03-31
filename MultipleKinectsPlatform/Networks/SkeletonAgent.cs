@@ -22,7 +22,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         public SkeletonAgent()
         {
             this.httpPort = 1626;
-            this.host = "localhost";
+            this.host = "d6xhjv1s.d1.comp.nus.edu.sg";
 
             this.udpPort = 1625;
 
