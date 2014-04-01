@@ -21,14 +21,35 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
 
         public SkeletonAgent()
         {
-            this.httpPort = 1626;
+            this.httpPort = 80;
             this.host = "d6xhjv1s.d1.comp.nus.edu.sg";
+
+            if(this.CheckForInternetConnection()){
+                this.host = "localhost";
+            }
+
 
             this.udpPort = 1625;
 
             this.endPoint = new Uri("http://"+this.host+":"+httpPort);
         }
         
+        public override bool CheckForInternetConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (var stream = client.OpenRead(this.host+":"+this.httpPort))
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public override void SendData(string sensorData_JSON, DateTime curTime)
         {
             try
