@@ -24,10 +24,9 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
             this.httpPort = 80;
             this.host = "d6xhjv1s.d1.comp.nus.edu.sg";
 
-            if(this.CheckForInternetConnection()){
+            if(!this.CheckForInternetConnection()){
                 this.host = "localhost";
             }
-
 
             this.udpPort = 1625;
 
@@ -36,17 +35,19 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
         
         public override bool CheckForInternetConnection()
         {
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                using (var client = new WebClient())
-                using (var stream = client.OpenRead(this.host+":"+this.httpPort))
-                {
-                    return true;
-                }
+                s.Connect(this.host,this.httpPort);
+                return true;
             }
-            catch
+            catch (SocketException)
             {
                 return false;
+            }
+            finally
+            {
+                ((IDisposable)s).Dispose();
             }
         }
 
