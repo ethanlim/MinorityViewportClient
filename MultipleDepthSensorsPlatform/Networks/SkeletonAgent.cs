@@ -8,7 +8,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Networks
 {
     class SkeletonAgent : Agent
     {

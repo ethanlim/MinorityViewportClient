@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Networks
 {
     abstract class Agent
     {

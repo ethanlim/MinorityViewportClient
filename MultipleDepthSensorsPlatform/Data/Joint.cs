@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.IO;
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data
 {
     [DataContract(Name="Joint")]
     public class Joint

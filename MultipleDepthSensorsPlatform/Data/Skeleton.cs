@@ -9,7 +9,7 @@ using System.Runtime.Serialization.Json;
 using Microsoft.Kinect;
 using System.IO;
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data
 {
     [DataContract(Name="Skeleton")]
     public class Skeleton
@@ -74,7 +74,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
                             {
                                 SkeletonPoint points = joint.Position;
 
-                                MultipleKinectsPlatform.Data.Joint convertedJoint = new MultipleKinectsPlatform.Data.Joint(points.X, points.Y, points.Z,joint.TrackingState.ToString());
+                                MultipleDepthSensorsPlatform.Data.Joint convertedJoint = new MultipleDepthSensorsPlatform.Data.Joint(points.X, points.Y, points.Z,joint.TrackingState.ToString());
 
                                 convertedJoints.Add(convertedJoint);
 
@@ -85,7 +85,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
 
                     /* Get the position of the skeleton */
 
-                    MultipleKinectsPlatform.Data.Skeleton convertedSkeleton = new Skeleton(convertedJoints,skeleton.Position.X,skeleton.Position.Y,skeleton.Position.Z,clientId,kinectId,skeleton.TrackingId,skeleton.TrackingState.ToString());
+                    MultipleDepthSensorsPlatform.Data.Skeleton convertedSkeleton = new Skeleton(convertedJoints,skeleton.Position.X,skeleton.Position.Y,skeleton.Position.Z,clientId,kinectId,skeleton.TrackingId,skeleton.TrackingState.ToString());
 
                     convertedSkeletons.Add(convertedSkeleton);
                 }
@@ -94,7 +94,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
             return convertedSkeletons;
         }
 
-        public static string ConvertToJSON(List<MultipleKinectsPlatform.Data.Skeleton> skeletonsToBeSerialise)
+        public static string ConvertToJSON(List<MultipleDepthSensorsPlatform.Data.Skeleton> skeletonsToBeSerialise)
         {
             string json = "";
 
@@ -102,7 +102,7 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
             {
                 MemoryStream memStream = new MemoryStream();
 
-                DataContractJsonSerializer jsonSer = new DataContractJsonSerializer(typeof(List<MultipleKinectsPlatform.Data.Skeleton>));
+                DataContractJsonSerializer jsonSer = new DataContractJsonSerializer(typeof(List<MultipleDepthSensorsPlatform.Data.Skeleton>));
 
                 jsonSer.WriteObject(memStream, skeletonsToBeSerialise);
 

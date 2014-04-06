@@ -12,11 +12,11 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Timers;
-using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data;
-using MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices;
+using MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data;
+using MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Devices;
 using Microsoft.Kinect;
 
-namespace MultipleKinectsPlatformClient
+namespace MultipleDepthSensorsPlatformClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Data
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data
 {
     using System.Windows;
     using Microsoft.Kinect;

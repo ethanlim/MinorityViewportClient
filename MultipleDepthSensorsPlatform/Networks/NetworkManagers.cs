@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Networks
 {
     class NetworkManagers
     {

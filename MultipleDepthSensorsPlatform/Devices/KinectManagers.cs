@@ -5,7 +5,7 @@ using Microsoft.Kinect;         //Require the SDK Library
 using System.Windows.Media.Imaging;
 using System.Windows;
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Devices
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Devices
 {
     public class DepthReadyArgs : EventArgs
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 
-namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
+namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Networks
 {
     class NTPClient
     {

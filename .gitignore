@@ -39,6 +39,7 @@ x64/
 
 #Visual Studio Files
 *.sdf
+MultipleDepthSensorsPlatformClient.*
 
 
 # Visual C++ cache files
