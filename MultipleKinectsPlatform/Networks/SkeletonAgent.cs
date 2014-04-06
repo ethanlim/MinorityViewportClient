@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.ServiceModel;
+using System.ServiceModel; 
 using System.ServiceModel.Channels;
 using System.Text;
 
@@ -50,12 +50,12 @@ namespace MultipleKinectsPlatformClient.MultipleKinectsPlatform.Networks
                 ((IDisposable)s).Dispose();
             }
         }
-
+         
         public override void SendData(string sensorData_JSON, DateTime curTime)
         {
             try
             {
-                UdpClient client = new UdpClient("127.0.0.1",this.udpPort);
+                UdpClient client = new UdpClient(this.host,this.udpPort);
 
                 String package = "{" + "\"TIME_STAMP\"" + ":" + ((Int32)(curTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString() + "," +
                                        "\"SENSOR_JSON\"" + ":" + sensorData_JSON +
