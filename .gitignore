@@ -39,8 +39,7 @@ x64/
 
 #Visual Studio Files
 *.sdf
-MultipleDepthSensorsPlatformClient.*
-
+MinorityViewportClient.*
 
 # Visual C++ cache files
 ipch/
