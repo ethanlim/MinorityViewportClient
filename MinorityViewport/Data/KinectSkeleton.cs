@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data
+namespace MinorityViewportClient.MinorityViewport.Data
 {
     using System.Collections.Generic;
     using System.Windows;

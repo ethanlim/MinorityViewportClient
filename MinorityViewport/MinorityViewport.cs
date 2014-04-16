@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;    
 using System.Windows.Media.Imaging;
-using MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data;
-using MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Devices;
-using MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Networks;
+using MinorityViewportClient.MinorityViewport.Data;
+using MinorityViewportClient.MinorityViewport.Devices;
+using MinorityViewportClient.MinorityViewport.Networks;
 using Microsoft.Kinect;
 using System.Threading;
 using System.Diagnostics;
 using System.ComponentModel;                                        //Require the SDK Library
 
-namespace MultipleDepthSensorsPlatformClient
+namespace MinorityViewportClient
 {
     class Core
     {
@@ -20,12 +20,12 @@ namespace MultipleDepthSensorsPlatformClient
 
         private uint clientId=0;
         private KinectManagers kinectMgr;
-        private MultipleDepthSensorsPlatform.Networks.NetworkManagers networkMgr;
+        private MinorityViewport.Networks.NetworkManagers networkMgr;
         
         private event EventHandler<DepthReadyArgs> DepthReady;
         private event EventHandler<SkeletonReadyArgs> SkeletonReady;
 
-        private MultipleDepthSensorsPlatform.Networks.Agent comAgent;
+        private MinorityViewport.Networks.Agent comAgent;
 
         private Stopwatch stopwatchDiagnostic;
         private System.IO.StreamWriter timingFile;
@@ -48,9 +48,9 @@ namespace MultipleDepthSensorsPlatformClient
 
             this.kinectMgr = new KinectManagers();
             this.kinectMgr.Shutdown();
-            this.networkMgr = new MultipleDepthSensorsPlatform.Networks.NetworkManagers();
+            this.networkMgr = new MinorityViewport.Networks.NetworkManagers();
             
-            this.comAgent = this.networkMgr.GetAgent(MultipleDepthSensorsPlatform.Networks.NetworkManagers.AgentType.Skeleton);
+            this.comAgent = this.networkMgr.GetAgent(MinorityViewport.Networks.NetworkManagers.AgentType.Skeleton);
 
             this.clientId = this.comAgent.RegisterClientId("Home", this.GetLocalIP());
             this.comAgent.RegisterSensorsUniqueId(
@@ -187,7 +187,7 @@ namespace MultipleDepthSensorsPlatformClient
                 stopwatchDiagnostic.Reset();
                 stopwatchDiagnostic.Start();
 
-                List<MultipleDepthSensorsPlatform.Data.Skeleton> convertedSkeletons = MultipleDepthSensorsPlatform.Data.Skeleton.ConvertKinectSkeletons(e.allSkeletons, this.clientId, e.kinectId);
+                List<MinorityViewport.Data.Skeleton> convertedSkeletons = MinorityViewport.Data.Skeleton.ConvertKinectSkeletons(e.allSkeletons, this.clientId, e.kinectId);
 
                 stopwatchDiagnostic.Stop();
                 long elapsed_time = stopwatchDiagnostic.ElapsedTicks;
@@ -200,7 +200,7 @@ namespace MultipleDepthSensorsPlatformClient
                     stopwatchDiagnostic.Start();
 
                     /****** Trade off if put this into background worker => Too slow frame rate  *******/
-                    string skeletonJSON = MultipleDepthSensorsPlatform.Data.Skeleton.ConvertToJSON(convertedSkeletons);
+                    string skeletonJSON = MinorityViewport.Data.Skeleton.ConvertToJSON(convertedSkeletons);
 
                     stopwatchDiagnostic.Stop();
                     elapsed_time = stopwatchDiagnostic.ElapsedTicks;

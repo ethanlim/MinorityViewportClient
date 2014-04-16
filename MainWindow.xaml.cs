@@ -12,11 +12,11 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Timers;
-using MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data;
-using MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Devices;
+using MinorityViewportClient.MinorityViewport.Data;
+using MinorityViewportClient.MinorityViewport.Devices;
 using Microsoft.Kinect;
 
-namespace MultipleDepthSensorsPlatformClient
+namespace MinorityViewportClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

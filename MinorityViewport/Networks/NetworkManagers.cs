@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Networks
+namespace MinorityViewportClient.MinorityViewport.Networks
 {
     class NetworkManagers
     {

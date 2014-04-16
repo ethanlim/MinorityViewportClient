@@ -8,7 +8,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 
-namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Networks
+namespace MinorityViewportClient.MinorityViewport.Networks
 {
     class SkeletonAgent : Agent
     {

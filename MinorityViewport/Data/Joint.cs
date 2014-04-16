@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.IO;
 
-namespace MultipleDepthSensorsPlatformClient.MultipleDepthSensorsPlatform.Data
+namespace MinorityViewportClient.MinorityViewport.Data
 {
     [DataContract(Name="Joint")]
     public class Joint
