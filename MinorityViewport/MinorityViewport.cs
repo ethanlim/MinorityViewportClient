@@ -232,10 +232,11 @@ namespace MinorityViewportClient
                     }
                     */
 
-                    //this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons, kinectId = e.kinectId });
-
                     timingFile.WriteLine(timingLine);
                 }
+
+                this.SkeletonReady(sender, new SkeletonReadyArgs { defaultEventArg = e, allSkeletons = e.allSkeletons, kinectId = e.kinectId });
+
             }
     
         }
